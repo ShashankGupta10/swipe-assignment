@@ -1,23 +1,17 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
 
 const EditableField = (props) => {
   return (
-    <InputGroup className="my-1 flex-nowrap">
+    <div className="flex items-center space-x-2 my-1">
       {props.cellData.leading != null && (
-        <InputGroup.Text className="bg-light fw-bold border-0 text-secondary px-2">
-          <span
-            className="border border-2 border-secondary rounded-circle d-flex align-items-center justify-content-center small"
-            style={{ width: "20px", height: "20px" }}
-          >
+        <div className="bg-gray-200 font-bold text-gray-500 p-1 rounded flex items-center justify-center">
+          <span className="border border-gray-400 rounded-full flex items-center justify-center text-xs w-5 h-5">
             {props.cellData.leading}
           </span>
-        </InputGroup.Text>
+        </div>
       )}
-      <Form.Control
-        className={props.cellData.textAlign}
+      <input
+        className={`border border-gray-300 px-3 py-2 rounded ${props.cellData.textAlign}`}
         type={props.cellData.type}
         placeholder={props.cellData.placeholder}
         min={props.cellData.min}
@@ -30,7 +24,7 @@ const EditableField = (props) => {
         onChange={props.onItemizedItemEdit}
         required
       />
-    </InputGroup>
+    </div>
   );
 };
 

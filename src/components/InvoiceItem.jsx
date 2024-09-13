@@ -1,9 +1,7 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
 import { BiTrash } from "react-icons/bi";
 import EditableField from "./EditableField";
+import Button from "./common/Button";
 
 const InvoiceItem = (props) => {
   const { onItemizedItemEdit, currency, onRowDel, items, onRowAdd } = props;
@@ -20,18 +18,21 @@ const InvoiceItem = (props) => {
 
   return (
     <div>
-      <Table>
+      <table className="min-w-full border border-gray-300 table-auto">
         <thead>
-          <tr>
-            <th>ITEM</th>
-            <th>QTY</th>
-            <th>PRICE/RATE</th>
-            <th className="text-center">ACTION</th>
+          <tr className="bg-gray-100">
+            <th className="px-4 py-2 text-left">ITEM</th>
+            <th className="px-4 py-2 text-left">QTY</th>
+            <th className="px-4 py-2 text-left">PRICE/RATE</th>
+            <th className="px-4 py-2 text-center">ACTION</th>
           </tr>
         </thead>
         <tbody>{itemTable}</tbody>
-      </Table>
-      <Button className="fw-bold" onClick={onRowAdd}>
+      </table>
+      <Button
+        onClick={onRowAdd}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-indigo-600 transition font-bold"
+      >
         Add Item
       </Button>
     </div>
@@ -42,9 +43,10 @@ const ItemRow = (props) => {
   const onDelEvent = () => {
     props.onDelEvent(props.item);
   };
+
   return (
-    <tr>
-      <td style={{ width: "100%" }}>
+    <tr className="border-b border-gray-300">
+      <td className="px-4 py-2 w-full">
         <EditableField
           onItemizedItemEdit={(evt) =>
             props.onItemizedItemEdit(evt, props.item.itemId)
@@ -70,7 +72,7 @@ const ItemRow = (props) => {
           }}
         />
       </td>
-      <td style={{ minWidth: "70px" }}>
+      <td className="px-4 py-2" style={{ minWidth: "70px" }}>
         <EditableField
           onItemizedItemEdit={(evt) =>
             props.onItemizedItemEdit(evt, props.item.itemId)
@@ -85,7 +87,7 @@ const ItemRow = (props) => {
           }}
         />
       </td>
-      <td style={{ minWidth: "130px" }}>
+      <td className="px-4 py-2" style={{ minWidth: "130px" }}>
         <EditableField
           onItemizedItemEdit={(evt) =>
             props.onItemizedItemEdit(evt, props.item.itemId)
@@ -96,18 +98,18 @@ const ItemRow = (props) => {
             name: "itemPrice",
             min: 1,
             step: "0.01",
-            presicion: 2,
+            precision: 2,
             textAlign: "text-end",
             value: props.item.itemPrice,
             id: props.item.itemId,
           }}
         />
       </td>
-      <td className="text-center" style={{ minWidth: "50px" }}>
+      <td className="px-4 py-2 text-center" style={{ minWidth: "50px" }}>
         <BiTrash
           onClick={onDelEvent}
+          className="text-red-500 cursor-pointer hover:text-red-600 transition"
           style={{ height: "33px", width: "33px", padding: "7.5px" }}
-          className="text-white mt-1 btn btn-danger"
         />
       </td>
     </tr>

@@ -1,90 +1,103 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Row, Table } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiSolidPencil, BiTrash } from "react-icons/bi";
 import { BsEyeFill } from "react-icons/bs";
 import InvoiceModal from "../components/InvoiceModal";
-import { useNavigate } from "react-router-dom";
 import { useInvoiceListData } from "../redux/hooks";
 import { useDispatch } from "react-redux";
 import { deleteInvoice } from "../redux/invoicesSlice";
+import { toast } from "react-toastify";
+import Button from "../components/common/Button";
+import { TbInvoice } from "react-icons/tb";
+
+// import emptyIllustration from "../assets/empty-illustration.png"; // Example placeholder
 
 const InvoiceList = () => {
   const { invoiceList, getOneInvoice } = useInvoiceListData();
   const isListEmpty = invoiceList.length === 0;
   const [copyId, setCopyId] = useState("");
   const navigate = useNavigate();
+
   const handleCopyClick = () => {
     const invoice = getOneInvoice(copyId);
     if (!invoice) {
-      alert("Please enter the valid invoice id.");
+      toast.error("Please enter a valid invoice ID.");
     } else {
       navigate(`/create/${copyId}`);
     }
   };
 
   return (
-    <Row>
-      <Col className="mx-auto" xs={12} md={8} lg={9}>
-        <h3 className="fw-bold pb-2 pb-md-4 text-center">Swipe Assignment</h3>
-        <Card className="d-flex p-3 p-md-4 my-3 my-md-4 ">
-          {isListEmpty ? (
-            <div className="d-flex flex-column align-items-center">
-              <h3 className="fw-bold pb-2 pb-md-4">No invoices present</h3>
-              <Link to="/create">
-                <Button variant="primary">Create Invoice</Button>
+    <div className="container mx-auto px-4">
+      <div className="text-center mb-6">
+        <h3 className="font-bold text-lg md:text-xl">Invoice Dashboard</h3>
+      </div>
+      <div className="bg-white shadow-xl rounded-xl p-6">
+        {isListEmpty ? (
+          <div className="text-center py-12">
+            <TbInvoice className="mx-auto mb-4 w-32 h-32" />
+            <h3 className="font-bold text-lg md:text-xl mb-4">
+              No invoices available
+            </h3>
+            <p className="text-gray-500 mb-6">
+              It looks like you haven&apos;t created any invoices yet.
+            </p>
+            <Link to="/create">
+              <Button className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-indigo-600">
+                Create Your First Invoice
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-bold text-lg">Invoice List</h3>
+              <Link
+                to="/create"
+                className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-indigo-600"
+              >
+                Create Invoice
               </Link>
-            </div>
-          ) : (
-            <div className="d-flex flex-column">
-              <div className="d-flex flex-row align-items-center justify-content-between">
-                <h3 className="fw-bold pb-2 pb-md-4">Invoice List</h3>
-                <Link to="/create">
-                  <Button variant="primary mb-2 mb-md-4">Create Invoice</Button>
-                </Link>
-
-                <div className="d-flex gap-2">
-                  <Button variant="dark mb-2 mb-md-4" onClick={handleCopyClick}>
-                    Copy Invoice
-                  </Button>
-
-                  <input
-                    type="text"
-                    value={copyId}
-                    onChange={(e) => setCopyId(e.target.value)}
-                    placeholder="Enter Invoice ID to copy"
-                    className="bg-white border"
-                    style={{
-                      height: "50px",
-                    }}
-                  />
-                </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  className="bg-gray-800 text-white px-4 py-2 rounded shadow"
+                  onClick={handleCopyClick}
+                >
+                  Copy Invoice
+                </Button>
+                <input
+                  type="text"
+                  value={copyId}
+                  onChange={(e) => setCopyId(e.target.value)}
+                  placeholder="Enter Invoice ID to copy"
+                  className="border p-2 rounded w-64"
+                />
               </div>
-              <Table responsive>
-                <thead>
-                  <tr>
-                    <th>Invoice No.</th>
-                    <th>Bill To</th>
-                    <th>Due Date</th>
-                    <th>Total Amt.</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {invoiceList.map((invoice) => (
-                    <InvoiceRow
-                      key={invoice.id}
-                      invoice={invoice}
-                      navigate={navigate}
-                    />
-                  ))}
-                </tbody>
-              </Table>
             </div>
-          )}
-        </Card>
-      </Col>
-    </Row>
+            <table className="min-w-full table-auto border-collapse">
+              <thead>
+                <tr>
+                  <th className="border px-4 py-2">Invoice No.</th>
+                  <th className="border px-4 py-2">Bill To</th>
+                  <th className="border px-4 py-2">Due Date</th>
+                  <th className="border px-4 py-2">Total Amt.</th>
+                  <th className="border px-4 py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {invoiceList.map((invoice) => (
+                  <InvoiceRow
+                    key={invoice.id}
+                    invoice={invoice}
+                    navigate={navigate}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
@@ -111,65 +124,39 @@ const InvoiceRow = ({ invoice, navigate }) => {
 
   return (
     <tr>
-      <td>{invoice.invoiceNumber}</td>
-      <td className="fw-normal">{invoice.billTo}</td>
-      <td className="fw-normal">{invoice.dateOfIssue}</td>
-      <td className="fw-normal">
+      <td className="border px-4 py-2">{invoice.invoiceNumber}</td>
+      <td className="border px-4 py-2">{invoice.billTo}</td>
+      <td className="border px-4 py-2">{invoice.dateOfIssue}</td>
+      <td className="border px-4 py-2">
         {invoice.currency}
         {invoice.total}
       </td>
-      <td style={{ width: "5%" }}>
-        <Button variant="outline-primary" onClick={handleEditClick}>
-          <div className="d-flex align-items-center justify-content-center gap-2">
-            <BiSolidPencil />
-          </div>
+      <td className="border px-4 py-2 flex gap-2">
+        <Button
+          className="bg-blue-500 text-white p-2 rounded shadow"
+          onClick={handleEditClick}
+        >
+          <BiSolidPencil />
         </Button>
-      </td>
-      <td style={{ width: "5%" }}>
-        <Button variant="danger" onClick={() => handleDeleteClick(invoice.id)}>
-          <div className="d-flex align-items-center justify-content-center gap-2">
-            <BiTrash />
-          </div>
+        <Button
+          className="bg-red-500 text-white p-2 rounded shadow"
+          onClick={() => handleDeleteClick(invoice.id)}
+        >
+          <BiTrash />
         </Button>
-      </td>
-      <td style={{ width: "5%" }}>
-        <Button variant="secondary" onClick={openModal}>
-          <div className="d-flex align-items-center justify-content-center gap-2">
-            <BsEyeFill />
-          </div>
+        <Button
+          className="bg-gray-500 text-white p-2 rounded shadow"
+          onClick={openModal}
+        >
+          <BsEyeFill />
         </Button>
+        <InvoiceModal
+          showModal={isOpen}
+          closeModal={closeModal}
+          info={invoice}
+          items={invoice.items}
+        />
       </td>
-      <InvoiceModal
-        showModal={isOpen}
-        closeModal={closeModal}
-        info={{
-          isOpen,
-          id: invoice.id,
-          currency: invoice.currency,
-          currentDate: invoice.currentDate,
-          invoiceNumber: invoice.invoiceNumber,
-          dateOfIssue: invoice.dateOfIssue,
-          billTo: invoice.billTo,
-          billToEmail: invoice.billToEmail,
-          billToAddress: invoice.billToAddress,
-          billFrom: invoice.billFrom,
-          billFromEmail: invoice.billFromEmail,
-          billFromAddress: invoice.billFromAddress,
-          notes: invoice.notes,
-          total: invoice.total,
-          subTotal: invoice.subTotal,
-          taxRate: invoice.taxRate,
-          taxAmount: invoice.taxAmount,
-          discountRate: invoice.discountRate,
-          discountAmount: invoice.discountAmount,
-        }}
-        items={invoice.items}
-        currency={invoice.currency}
-        subTotal={invoice.subTotal}
-        taxAmount={invoice.taxAmount}
-        discountAmount={invoice.discountAmount}
-        total={invoice.total}
-      />
     </tr>
   );
 };
