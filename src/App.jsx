@@ -8,7 +8,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <ToastContainer />
-      <div className="w-full h-screen flex justify-center items-center">
+      <div className="w-full h-screen">
       <Routes>
         <Route path="/" element={<InvoiceList />} />
         <Route path="/create" element={<Invoice />} />

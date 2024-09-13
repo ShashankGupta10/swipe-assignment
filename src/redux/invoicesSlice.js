@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 const invoicesSlice = createSlice({
   name: "invoices",
@@ -8,6 +9,7 @@ const invoicesSlice = createSlice({
       state.push(action.payload);
     },
     deleteInvoice: (state, action) => {
+      toast.success("Invoice deleted successfully 🥳");
       return state.filter((invoice) => invoice.id !== action.payload);
     },
     updateInvoice: (state, action) => {

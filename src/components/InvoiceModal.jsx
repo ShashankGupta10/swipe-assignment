@@ -24,7 +24,6 @@ const generatePDF = () => {
 const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, taxAmount, discountAmount, total }) => {
   const modalRef = useRef(null);
 
-  // Close modal if clicking outside the modal container
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -40,7 +39,7 @@ const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, 
   }, [showModal, closeModal]);
 
   return (
-    <div>
+    <>
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div ref={modalRef} className="bg-white rounded-lg w-full max-w-4xl p-6 py-12 relative">
@@ -162,7 +161,7 @@ const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, 
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

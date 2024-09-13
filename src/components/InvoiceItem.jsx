@@ -17,7 +17,7 @@ const InvoiceItem = (props) => {
   ));
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <table className="min-w-full border border-gray-300 table-auto">
         <thead>
           <tr className="bg-gray-100">
@@ -46,7 +46,7 @@ const ItemRow = (props) => {
 
   return (
     <tr className="border-b border-gray-300">
-      <td className="px-4 py-2 w-full">
+      <td className="px-4 py-2 w-full block md:table-cell">
         <EditableField
           onItemizedItemEdit={(evt) =>
             props.onItemizedItemEdit(evt, props.item.itemId)
@@ -72,7 +72,7 @@ const ItemRow = (props) => {
           }}
         />
       </td>
-      <td className="px-4 py-2" style={{ minWidth: "70px" }}>
+      <td className="px-4 py-2 block md:table-cell" style={{ minWidth: "70px" }}>
         <EditableField
           onItemizedItemEdit={(evt) =>
             props.onItemizedItemEdit(evt, props.item.itemId)
@@ -87,7 +87,7 @@ const ItemRow = (props) => {
           }}
         />
       </td>
-      <td className="px-4 py-2" style={{ minWidth: "130px" }}>
+      <td className="px-4 py-2 block md:table-cell" style={{ minWidth: "130px" }}>
         <EditableField
           onItemizedItemEdit={(evt) =>
             props.onItemizedItemEdit(evt, props.item.itemId)
@@ -105,7 +105,7 @@ const ItemRow = (props) => {
           }}
         />
       </td>
-      <td className="px-4 py-2 text-center" style={{ minWidth: "50px" }}>
+      <td className="px-4 py-2 text-center block md:table-cell" style={{ minWidth: "50px" }}>
         <BiTrash
           onClick={onDelEvent}
           className="text-red-500 cursor-pointer hover:text-red-600 transition"
