@@ -11,7 +11,7 @@ const InvoiceList = () => {
       <div className="text-center mb-6">
         <h3 className="font-bold text-4xl">Invoice Dashboard</h3>
       </div>
-      <div className="bg-white shadow-xl rounded-xl p-6 w-full max-w-5xl">
+      <div className="bg-white shadow-xl rounded-xl py-6 md:px-6 w-full max-w-5xl">
         {isListEmpty ? (
           <NoInvoices />
         ) : (

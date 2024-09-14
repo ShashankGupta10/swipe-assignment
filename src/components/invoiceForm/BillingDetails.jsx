@@ -2,7 +2,7 @@ import React from "react";
 
 const BillingDetails = ({ formData, editField }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-xl p-4 border">
       <div>
         <label className="font-medium">Bill to:</label>
         <input

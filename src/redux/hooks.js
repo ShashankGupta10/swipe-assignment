@@ -20,3 +20,7 @@ export const useInvoiceListData = () => {
     listSize,
   };
 };
+
+export const useGetProducts = () => {
+  return useSelector((state) => state.products);
+}

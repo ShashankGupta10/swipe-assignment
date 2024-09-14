@@ -2,7 +2,7 @@ import React from "react";
 
 const DateAndId = ({ formData, editField }) => {
   return (
-    <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
+    <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center rounded-xl border p-4">
       <div className="flex flex-col gap-2">
         <div className="grid grid-cols-2 items-center">
           <span className="font-medium">Current Date:&nbsp;</span>

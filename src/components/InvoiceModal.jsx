@@ -23,6 +23,7 @@ const generatePDF = () => {
 
 const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, taxAmount, discountAmount, total }) => {
   const modalRef = useRef(null);
+  console.log(taxAmount, discountAmount, total);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -41,7 +42,7 @@ const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, 
   return (
     <>
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+        <div className="fixed z-10 inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div ref={modalRef} className="bg-white rounded-lg w-full max-w-4xl p-6 py-12 relative">
             <div id="invoiceCapture" className="space-y-6">
               <div className="flex justify-between items-start bg-gray-100 p-4 rounded-lg">
@@ -149,11 +150,11 @@ const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, 
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-              <Button onClick={generatePDF}>
+              <Button onClick={generatePDF} type={"button"}>
                 <BiPaperPlane className="mr-2 w-8 h-8" />
                 <span>Send Invoice</span>
               </Button>
-              <Button onClick={generatePDF}>
+              <Button onClick={generatePDF} type={"button"}>
                 <BiCloudDownload className="mr-2 w-8 h-8" />
                 <span>Download Copy</span>
               </Button>

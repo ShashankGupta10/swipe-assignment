@@ -77,14 +77,14 @@ const InvoiceForm = () => {
     setFormData({ ...formData, items: updatedItems });
   };
 
-  const handleAddEvent = () => {
-    const id = (new Date() + Math.floor(Math.random() * 999999)).toString(36);
+  const handleAddEvent = (product) => {
+    const id = product.itemId || (new Date() + Math.floor(Math.random() * 999999)).toString(36);
     const newItem = {
       itemId: id,
-      itemName: "",
-      itemDescription: "",
-      itemPrice: "1.00",
-      itemQuantity: 1,
+      itemName: product.itemName || "",
+      itemDescription: product.itemDescription || "",
+      itemPrice: product.itemPrice || "1.00",
+      itemQuantity: product.itemQuantity || 1,
     };
     setFormData({
       ...formData,
@@ -141,20 +141,22 @@ const InvoiceForm = () => {
   };
 
   return (
-    <form onSubmit={() => setIsOpen(true)} className="xl:mx-16 xl:my-12 lg:mx-12 lg:my-8 md:mx-8 md:my-4 mx-4 my-2">
+    <form
+      onSubmit={() => setIsOpen(true)}
+      className="max-w-screen-xl md:m-4 m-2 p-4 border rounded-xl"
+    >
       <Button onClick={() => navigate("/")}>
         <BiArrowBack size={18} />
         Go Back
       </Button>
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-4 py-6">
         <div className="md:col-span-6">
-          <div className="md:p-6 p-3 bg-white flex flex-col gap-4">
+          <div className="bg-white flex flex-col gap-4">
             <DateAndId formData={formData} editField={handleChange} />
             <BillingDetails formData={formData} editField={handleChange} />
             <InvoiceItem
               onItemizedItemEdit={onItemizedItemEdit}
               onRowDel={handleRowDel}
-              onAddEvent={handleAddEvent}
               currency={formData.currency}
               items={formData.items}
               onRowAdd={handleAddEvent}
@@ -176,8 +178,8 @@ const InvoiceForm = () => {
         items={formData.items}
         currency={formData.currency}
         subTotal={formData.subTotal}
-        taxAmmount={formData.taxAmount}
-        discountAmmount={formData.discountAmount}
+        taxAmount={formData.taxAmount}
+        discountAmount={formData.discountAmount}
         total={formData.total}
       />
     </form>
