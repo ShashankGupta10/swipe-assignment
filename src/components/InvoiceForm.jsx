@@ -13,6 +13,7 @@ import BillingDetails from "./invoiceForm/BillingDetails";
 import FinalDetails from "./invoiceForm/FinalDetails";
 import DateAndId from "./invoiceForm/DateAndId";
 import InvoiceSummary from "./invoiceForm/InvoiceSummary";
+import Button from "./common/Button";
 
 const InvoiceForm = () => {
   const dispatch = useDispatch();
@@ -140,19 +141,14 @@ const InvoiceForm = () => {
   };
 
   return (
-    <form onSubmit={() => setIsOpen(true)}>
-      <div className="flex items-center">
+    <form onSubmit={() => setIsOpen(true)} className="xl:mx-16 xl:my-12 lg:mx-12 lg:my-8 md:mx-8 md:my-4 mx-4 my-2">
+      <Button onClick={() => navigate("/")}>
         <BiArrowBack size={18} />
-        <div className="font-bold mt-1 mx-2 cursor-pointer">
-          <Link to="/">
-            <h5>Go Back</h5>
-          </Link>
-        </div>
-      </div>
-
+        Go Back
+      </Button>
       <div className="grid grid-cols-1 gap-4">
         <div className="md:col-span-6">
-          <div className="p-6 bg-white shadow-md rounded-lg">
+          <div className="md:p-6 p-3 bg-white flex flex-col gap-4">
             <DateAndId formData={formData} editField={handleChange} />
             <BillingDetails formData={formData} editField={handleChange} />
             <InvoiceItem
@@ -167,6 +163,7 @@ const InvoiceForm = () => {
             <InvoiceSummary
               formData={formData}
               handleAddInvoice={handleAddInvoice}
+              setIsOpen={setIsOpen}
             />
           </div>
         </div>

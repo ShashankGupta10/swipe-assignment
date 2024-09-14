@@ -5,9 +5,11 @@ import { BsEyeFill } from "react-icons/bs";
 import Button from "../common/Button";
 import InvoiceModal from "../InvoiceModal";
 import { deleteInvoice } from "../../redux/invoicesSlice";
+import DeleteModal from "./DeleteModal";
 
 const InvoiceRow = ({ invoice, navigate, key }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const dispatch = useDispatch();
 
   return (
@@ -23,14 +25,14 @@ const InvoiceRow = ({ invoice, navigate, key }) => {
           <Button onClick={() => navigate(`/edit/${invoice.id}`)}>
             <BiSolidPencil />
           </Button>
-          <Button onClick={() => dispatch(deleteInvoice(invoice.id))}>
-            <BiTrash />
-          </Button>
           <Button onClick={() => setIsOpen(true)}>
             <BsEyeFill />
           </Button>
           <Button onClick={() => navigate(`/create/${invoice.id}`)}>
             <BiCopy className="" />
+          </Button>
+          <Button className={'bg-red-600 hover:bg-red-500'} onClick={() => setIsDeleteModalOpen(invoice.id)}>
+            <BiTrash />
           </Button>
         </td>
       </tr>
@@ -40,6 +42,7 @@ const InvoiceRow = ({ invoice, navigate, key }) => {
         info={invoice}
         items={invoice.items}
       />
+      <DeleteModal id={isDeleteModalOpen} deleteInvoice={deleteInvoice} dispatch={dispatch} setIsDeleteModalOpen={setIsDeleteModalOpen} />
     </>
   );
 };

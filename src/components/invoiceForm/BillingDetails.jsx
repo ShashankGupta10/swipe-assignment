@@ -4,13 +4,13 @@ const BillingDetails = ({ formData, editField }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <label className="font-bold">Bill to:</label>
+        <label className="font-medium">Bill to:</label>
         <input
           placeholder="Who is this invoice to?"
           value={formData.billTo}
           type="text"
           name="billTo"
-          className="border border-gray-300 rounded p-2 mt-2 w-full"
+          className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           onChange={editField}
           required
         />
@@ -19,7 +19,7 @@ const BillingDetails = ({ formData, editField }) => {
           value={formData.billToEmail}
           type="email"
           name="billToEmail"
-          className="border border-gray-300 rounded p-2 mt-2 w-full"
+          className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           onChange={editField}
           required
         />
@@ -28,19 +28,19 @@ const BillingDetails = ({ formData, editField }) => {
           value={formData.billToAddress}
           type="text"
           name="billToAddress"
-          className="border border-gray-300 rounded p-2 mt-2 w-full"
+          className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           onChange={editField}
           required
         />
       </div>
       <div>
-        <label className="font-bold">Bill from:</label>
+        <label className="font-medium">Bill from:</label>
         <input
           placeholder="Who is this invoice from?"
           value={formData.billFrom}
           type="text"
           name="billFrom"
-          className="border border-gray-300 rounded p-2 mt-2 w-full"
+          className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           onChange={editField}
           required
         />
@@ -49,7 +49,7 @@ const BillingDetails = ({ formData, editField }) => {
           value={formData.billFromEmail}
           type="email"
           name="billFromEmail"
-          className="border border-gray-300 rounded p-2 mt-2 w-full"
+          className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           onChange={editField}
           required
         />
@@ -58,7 +58,7 @@ const BillingDetails = ({ formData, editField }) => {
           value={formData.billFromAddress}
           type="text"
           name="billFromAddress"
-          className="border border-gray-300 rounded p-2 mt-2 w-full"
+          className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           onChange={editField}
           required
         />

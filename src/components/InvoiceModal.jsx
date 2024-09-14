@@ -52,9 +52,9 @@ const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, 
                   <h4 className="font-bold text-lg">
                     {info.billFrom || "John Uberbacher"}
                   </h4>
-                  <h7 className="font-bold text-gray-500 mb-1">
+                  <p className="font-bold text-gray-500 mb-1">
                     Invoice No.: {info.invoiceNumber || ""}
-                  </h7>
+                  </p>
                 </div>
                 <div className="text-right">
                   <h6 className="font-bold mt-1 mb-2">Amount Due:</h6>

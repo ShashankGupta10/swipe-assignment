@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../common/Button";
-const InvoiceSummary = ({ formData, handleAddInvoice }) => {
+
+const InvoiceSummary = ({ formData, handleAddInvoice, setIsOpen }) => {
   return (
     <div className="text-right flex flex-col gap-4">
       <h2 className="text-gray-800 text-xl font-bold">
