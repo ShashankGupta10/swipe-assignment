@@ -96,7 +96,7 @@ const productsSlice = createSlice({
         (product) => product.id === action.payload.id
       );
       if (index !== -1) {
-        state.products[index] = { ...action.payload };
+        state.products[index] = { ...state.products[index], ...action.payload.updatedProduct };
       }
     },
     setProducts: (state, action) => {

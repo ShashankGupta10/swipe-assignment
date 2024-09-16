@@ -1,5 +1,5 @@
 const generateRandomId = () => {
-  const randomNumber = Math.floor(Math.random() * 100);
+  const randomNumber = Math.floor(Math.random() * 1000);
 
   return randomNumber;
 };

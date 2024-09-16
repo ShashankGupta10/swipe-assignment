@@ -1,11 +1,10 @@
-import { useGetProducts, useUpdateProduct } from "../../redux/hooks";
+import { useGetProducts } from "../../redux/hooks";
 import { useState } from "react";
 import { FaEdit, FaSave } from "react-icons/fa"; // Import edit and save icons
 import { useSelector } from "react-redux";
 
 const ProductsTab = () => {
   const { products } = useGetProducts();
-  const updateProduct = useUpdateProduct(); // Add hook to update product in redux
   const [_, setDraggedProduct] = useState(null);
   const [editingProductId, setEditingProductId] = useState(null); // Track which product is being edited
   const [editedProduct, setEditedProduct] = useState({}); // Store edited values

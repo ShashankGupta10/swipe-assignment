@@ -34,7 +34,6 @@ const FinalDetails = ({ editField }) => {
             <option value="¥">Japanese Yen</option>
             <option value="₽">Russian Ruble</option>
             <option value="₩">South Korean Won</option>
-            <option value="¥">Chinese Yuan (Renminbi)</option>
           </select>
         </div>
         <div>

@@ -27,11 +27,5 @@ export const useGetProducts = () => {
 }
 
 export const useGetProduct = (id) => {
-  const data = useSelector((state) => state.products);
   return useSelector((state) => state.products.products.find((product) => product.id === id));
-}
-
-export const useUpdateProduct = () => {
-  const dispatch = useDispatch();
-  return (product) => dispatch(updateProduct(product));
 }

@@ -18,6 +18,8 @@ import {
   initializeCurrentInvoice,
   updateCurrentInvoice,
 } from "../../redux/currentInvoiceSlice";
+import { updateProduct } from "../../redux/productsSlice";
+import { currencyMap } from "../../utils/currencyMap";
 
 const InvoiceForm = () => {
   const dispatch = useDispatch();
@@ -28,12 +30,12 @@ const InvoiceForm = () => {
   const isEdit = location.pathname.includes("edit");
   const data = useGetProducts();
   const formData = useSelector((state) => state.currentInvoice);
+  const products = useSelector((state) => state.products);
 
   const [isOpen, setIsOpen] = useState(false);
   const { getOneInvoice, listSize } = useInvoiceListData();
 
   useEffect(() => {
-    console.log(isEdit, isCopy, params.id);
     if (isEdit) {
       const invoice = getOneInvoice(params.id);
       console.log(invoice);
@@ -48,7 +50,6 @@ const InvoiceForm = () => {
         })
       );
     } else {
-      console.log("DOSPATCHING");
       dispatch(initializeCurrentInvoice({ invoiceNumber: listSize + 1 }));
     }
   }, [params.id]);
@@ -131,7 +132,7 @@ const InvoiceForm = () => {
   );
 
   const handleChange = useCallback(
-    (e) => {
+    async (e) => {
       dispatch(
         updateCurrentInvoice({
           ...formData,
@@ -140,9 +141,16 @@ const InvoiceForm = () => {
       );
 
       if (e.target.name === "currency") {
-        dispatch(
-          updateCurrentInvoice({ ...formData, currency: e.target.value })
-        );
+        const response = await fetch(`https://api.freecurrencyapi.com/v1/latest?base_currency=${currencyMap[formData.currency]}&currencies=${currencyMap[e.target.value]}&apikey=fca_live_Vgab5S9zZ9wLi7DuX40hZ5KMhZ5Vn8oIxvb5WJq6`)
+        const data = await response.json();
+        console.log(data.data, e.target.name, currencyMap[e.target.value]);
+        const currencyVal = data.data[currencyMap[e.target.value]];
+        products.products.forEach((product) => {
+          const price = product.productPrice;
+          console.log(typeof price, typeof currencyVal);
+          const convertedPrice = (Number(price) * currencyVal).toFixed(2);
+          dispatch(updateProduct({ id: product.id, updatedProduct: { productPrice: convertedPrice } }));
+        });
       }
     },
     [formData]

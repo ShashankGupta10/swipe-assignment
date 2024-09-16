@@ -38,7 +38,7 @@ const currentInvoiceSlice = createSlice({
                 currentDate: new Date().toLocaleDateString(),
             };
         },
-        initializeCurrentInvoice: (state, action) => {
+        initializeCurrentInvoice: (_, action) => {
             const { invoiceNumber } = action.payload;
             const id = generateRandomId();
             const currentDate = new Date().toLocaleDateString();
