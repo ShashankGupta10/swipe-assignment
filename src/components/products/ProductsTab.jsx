@@ -1,10 +1,12 @@
 import { useGetProducts } from "../../redux/hooks";
 import { useState } from "react";
 import { FaEdit, FaSave } from "react-icons/fa"; // Import edit and save icons
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProduct } from "../../redux/productsSlice";
 
 const ProductsTab = () => {
   const { products } = useGetProducts();
+  const dispatch = useDispatch();
   const [_, setDraggedProduct] = useState(null);
   const [editingProductId, setEditingProductId] = useState(null); // Track which product is being edited
   const [editedProduct, setEditedProduct] = useState({}); // Store edited values
@@ -30,8 +32,9 @@ const ProductsTab = () => {
   };
 
   const handleSave = () => {
-    updateProduct(editedProduct); // Dispatch the updated product to Redux
-    setEditingProductId(null); // Exit edit mode
+    console.log(editedProduct);
+    dispatch(updateProduct({id: editedProduct.id, updatedProduct: editedProduct }));
+    setEditingProductId(null);
   };
 
   return (

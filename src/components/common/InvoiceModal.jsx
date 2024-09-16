@@ -90,7 +90,7 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
                 <div className="text-right">
                   <h6 className="font-bold mt-1 mb-2">Amount Due:</h6>
                   <h5 className="font-bold text-gray-600">
-                    {info.currency} {handleCalculateTotal()}
+                    {info.currency} {handleCalculateTotal().toFixed(2)}
                   </h5>
                 </div>
               </div>

@@ -38,7 +38,6 @@ const InvoiceForm = () => {
   useEffect(() => {
     if (isEdit) {
       const invoice = getOneInvoice(params.id);
-      console.log(invoice);
       dispatch(updateCurrentInvoice(invoice));
     } else if (isCopy && params.id) {
       const invoice = getOneInvoice(params.id);
@@ -51,6 +50,7 @@ const InvoiceForm = () => {
       );
     } else {
       dispatch(initializeCurrentInvoice({ invoiceNumber: listSize + 1 }));
+      // dispatch(resetProducts());
     }
   }, [params.id]);
 
@@ -140,28 +140,29 @@ const InvoiceForm = () => {
         })
       );
 
-      if (e.target.name === "currency") {
-        const response = await fetch(`https://api.freecurrencyapi.com/v1/latest?base_currency=${currencyMap[formData.currency]}&currencies=${currencyMap[e.target.value]}&apikey=fca_live_Vgab5S9zZ9wLi7DuX40hZ5KMhZ5Vn8oIxvb5WJq6`)
-        const data = await response.json();
-        console.log(data.data, e.target.name, currencyMap[e.target.value]);
-        const currencyVal = data.data[currencyMap[e.target.value]];
-        products.products.forEach((product) => {
-          const price = product.productPrice;
-          console.log(typeof price, typeof currencyVal);
-          const convertedPrice = (Number(price) * currencyVal).toFixed(2);
-          dispatch(updateProduct({ id: product.id, updatedProduct: { productPrice: convertedPrice } }));
-        });
-      }
+      // if (e.target.name === "currency") {
+      //   const response = await fetch(`https://api.freecurrencyapi.com/v1/latest?base_currency=USD&currencies=${currencyMap[e.target.value]}&apikey=fca_live_Vgab5S9zZ9wLi7DuX40hZ5KMhZ5Vn8oIxvb5WJq6`)
+      //   const data = await response.json();
+      //   const currencyVal = data.data[currencyMap[e.target.value]];
+      //   products.products.forEach((product) => {
+      //     const price = product.productPriceInUSD;
+      //     const convertedPrice = (Number(price) * currencyVal).toFixed(2);
+      //     dispatch(updateProduct({ id: product.id, updatedProduct: { productPrice: convertedPrice } }));
+      //   });
+      // }
     },
     [formData]
   );
 
   const handleAddInvoice = useCallback(() => {
     if (isEdit) {
-      dispatch(updateInvoice({ id: params.id, updatedInvoice: formData }));
+      console.log(params.id, formData);
+      const resp = dispatch(updateInvoice({ id: formData.id, updatedInvoice: formData }));
+      console.log(resp);
       toast.success("Invoice updated successfully 🥳");
     } else {
       dispatch(addInvoice(formData));
+      // dispatch(resetProducts());
       toast.success("Invoice added successfully 🥳");
     }
     navigate("/");
@@ -190,6 +191,7 @@ const InvoiceForm = () => {
             <InvoiceSummary
               handleAddInvoice={handleAddInvoice}
               setIsOpen={setIsOpen}
+              isEdit={isEdit}
             />
           </div>
         </div>

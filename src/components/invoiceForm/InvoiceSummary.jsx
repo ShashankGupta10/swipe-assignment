@@ -11,10 +11,10 @@ const InvoiceSummary = ({ setIsOpen, handleAddInvoice, isEdit }) => {
           Subtotal: {currency} {subTotal}
         </p>
         <p className="text-gray-800 text-xl font-medium">
-          Tax: {currency} {(Number(subTotal) * Number(taxRate)) / 100}
+          Tax: {currency} {((Number(subTotal) * Number(taxRate)) / 100).toFixed(2)}
         </p>
         <p className="text-gray-800 text-xl font-medium">
-          Discount: {currency} {(Number(subTotal) * Number(discountRate)) / 100}
+          Discount: {currency} {((Number(subTotal) * Number(discountRate)) / 100).toFixed(2)}
         </p>
         <hr className="my-2 w-48 block ml-auto" />
         <h2 className="text-gray-800 text-xl font-bold">
