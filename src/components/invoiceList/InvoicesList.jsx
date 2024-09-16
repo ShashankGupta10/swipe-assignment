@@ -4,7 +4,6 @@ import Button from "../common/Button";
 
 const InvoicesList = ({ invoiceList }) => {
   const navigate = useNavigate();
-  console.log("hello bro");
   return (
     <div className="max-w-screen-xl">
       <div className="flex justify-end mb-4">
@@ -16,7 +15,7 @@ const InvoicesList = ({ invoiceList }) => {
             <tr>
               <th className="p-2 text-nowrap">Inv No.</th>
               <th className="p-2 text-nowrap">Bill To</th>
-              <th className="p-2 text-nowrap">Due Date</th>
+              <th className="p-2 text-  nowrap">Due Date</th>
               <th className="p-2 text-nowrap">Total Amt.</th>
               <th className="p-2 text-nowrap">Actions</th>
             </tr>

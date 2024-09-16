@@ -1,8 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { BiPaperPlane, BiCloudDownload } from "react-icons/bi";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Button from "./Button";
+import { useGetProducts, useInvoiceListData } from "../../redux/hooks";
+import { useSelector } from "react-redux";
 
 const generatePDF = () => {
   html2canvas(document.querySelector("#invoiceCapture")).then((canvas) => {
@@ -21,8 +23,11 @@ const generatePDF = () => {
   });
 };
 
-const InvoiceModal = ({ showModal, closeModal, info, discountAmount }) => {
+const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
+  const { invoiceList } = useInvoiceListData();
+  const info = invoiceId ? invoiceList.find(inv => inv.id === invoiceId) : useSelector((state) => state.currentInvoice);
   const modalRef = useRef(null);
+  const { products } = useGetProducts()
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -38,11 +43,37 @@ const InvoiceModal = ({ showModal, closeModal, info, discountAmount }) => {
     };
   }, [showModal, closeModal]);
 
+  const handleCalculateTotal = () => {
+    let total = 0;
+    info.items.forEach((item) => {
+      const product = products.find((p) => p.id === item.id);
+      total += product.productPrice * item.quantity;
+    });
+
+    total += (Number(info.taxRate) * Number(total)) / 100 - (Number(info.discountRate) * Number(total)) / 100;
+    return total;
+  };
+
+  const items = useMemo(() => {
+    return info.items.map((item) => {
+      const product = products.find((p) => p.id === item.id);
+      return {
+        ...item,
+        productName: product ? product.productName : '',
+        productDescription: product ? product.productDescription : '',
+        productPrice: product ? product.productPrice : 0,
+      };
+    });
+  }, [info.items, products]);
+
   return (
     <>
       {showModal && (
         <div className="fixed z-10 inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div ref={modalRef} className="bg-white rounded-xl w-full max-w-4xl px-6 py-12 relative">
+          <div
+            ref={modalRef}
+            className="bg-white rounded-xl w-full max-w-4xl px-6 py-12 relative"
+          >
             <div id="invoiceCapture" className="space-y-6">
               <div className="flex justify-between items-start bg-gray-100 p-4 rounded-lg">
                 <div>
@@ -59,7 +90,7 @@ const InvoiceModal = ({ showModal, closeModal, info, discountAmount }) => {
                 <div className="text-right">
                   <h6 className="font-bold mt-1 mb-2">Amount Due:</h6>
                   <h5 className="font-bold text-gray-600">
-                    {info.currency} {info.total}
+                    {info.currency} {handleCalculateTotal()}
                   </h5>
                 </div>
               </div>
@@ -93,20 +124,22 @@ const InvoiceModal = ({ showModal, closeModal, info, discountAmount }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {info.items.map((item, i) => (
-                    <tr key={i}>
-                      <td className="py-2 px-2">{item.itemQuantity}</td>
-                      <td className="text-wrap px-2">
-                        {item.itemName} - {item.itemDescription}
-                      </td>
-                      <td className="px-2">
-                        {info.currency} {item.itemPrice}
-                      </td>
-                      <td className="px-2">
-                        {info.currency} {item.itemPrice * item.itemQuantity}
-                      </td>
-                    </tr>
-                  ))}
+                  {items.map((item, i) => {
+                    return (
+                      <tr key={i}>
+                        <td className="py-2 px-2">{item.quantity}</td>
+                        <td className="text-wrap px-2">
+                          {item.productName} - {item.productDescription}  
+                        </td>
+                        <td className="px-2">
+                          {item.currency} {item.productPrice}
+                        </td>
+                        <td className="px-2">
+                          {info.currency} {item.productPrice * item.quantity}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
 
@@ -119,21 +152,21 @@ const InvoiceModal = ({ showModal, closeModal, info, discountAmount }) => {
                       <tr className="text-right">
                         <td className="font-bold">TAX</td>
                         <td className="text-right">
-                          {info.currency} {info.taxAmount}
+                          {info.currency} {((info.taxRate * handleCalculateTotal()) / 100).toFixed(2)}
                         </td>
                       </tr>
-                      {discountAmount !== 0.0 && (
+                      {info.discountRate !== 0.0 && (
                         <tr className="text-right">
                           <td className="font-bold">DISCOUNT</td>
                           <td className="text-right">
-                            {info.currency} {info.discountAmount}
+                            {info.currency} {((info.discountRate * handleCalculateTotal()) / 100).toFixed(2)}
                           </td>
                         </tr>
                       )}
                       <tr className="text-right">
                         <td className="font-bold">TOTAL</td>
                         <td className="text-right">
-                          {info.currency} {info.total}
+                          {info.currency} {handleCalculateTotal().toFixed(2)}
                         </td>
                       </tr>
                     </tbody>
@@ -142,9 +175,7 @@ const InvoiceModal = ({ showModal, closeModal, info, discountAmount }) => {
               </div>
 
               {info.notes && (
-                <div className="bg-gray-100 p-4 rounded-lg">
-                  {info.notes}
-                </div>
+                <div className="bg-gray-100 p-4 rounded-lg">{info.notes}</div>
               )}
             </div>
 

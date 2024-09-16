@@ -2,33 +2,25 @@ import React, { memo, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import Button from "../common/Button";
 import ProductsModal from "../products/ProductsModal";
+import { useGetProduct } from "../../redux/hooks";
+import { useSelector } from "react-redux";
 
 const InvoiceItem = (props) => {
   const {
-    currency,
     onRowDel,
-    items,
     onRowAdd,
     updateQuantity,
   } = props;
+
+  const { currency, items } = useSelector((state) => state.currentInvoice);
   const [openProductModal, setOpenProductModal] = useState(false);
   const handleDrop = (e) => {
     e.preventDefault();
     const data = e.dataTransfer.getData("application/json");
-    const item = JSON.parse(data);
-    const isItemPresent = items.find((i) => i.itemId === item.id);
-    if (isItemPresent) updateQuantity(item.id, isItemPresent.itemQuantity + 1);
-    else {
-      const addableItem = {
-        itemId: item.id,
-        itemName: item.productName,
-        itemDescription: item.productDescription,
-        itemQuantity: 1,
-        itemPrice: item.productPrice,
-        itemImage: item.productImage,
-      };
-      onRowAdd(addableItem);
-    }
+    const id = JSON.parse(data);
+    const isItemPresent = items.find((i) => i?.id === id);
+    if (isItemPresent) updateQuantity(id, isItemPresent.quantity + 1);
+    else onRowAdd(id);
   };
 
   return (
@@ -75,6 +67,7 @@ const ItemForm = memo(({
   currency,
   updateQuantity,
 }) => {
+  const itemData = useGetProduct(item.id);
   return (
     <section key={key}>
       <div className="flow-root">
@@ -83,7 +76,7 @@ const ItemForm = memo(({
             <div className="shrink-0">
               <img
                 className="h-24 w-24 max-w-full rounded-lg object-cover"
-                src={item.itemImage}
+                src={itemData.productImage}
                 alt=""
               />
             </div>
@@ -92,16 +85,16 @@ const ItemForm = memo(({
               <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
                 <div className="pr-8 sm:pr-5">
                   <p className="text-base font-semibold text-gray-900">
-                    {item.itemName}
+                    {itemData.productName}
                   </p>
                   <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">
-                    {item.itemDescription}
+                    {itemData.productDescription}
                   </p>
                 </div>
 
                 <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
                   <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">
-                    {currency} {item.itemPrice}
+                    {currency} {itemData.productPrice}
                   </p>
 
                   <div className="sm:order-1">
@@ -110,22 +103,22 @@ const ItemForm = memo(({
                         className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
                         type="button"
                         onClick={(e) => {
-                          e.target.value = item.itemQuantity - 1;
-                          if (item.itemQuantity > 1)
-                            updateQuantity(item.itemId, item.itemQuantity - 1);
-                          else onDelEvent(item);
+                          e.target.value = item.quantity - 1;
+                          if (item.quantity > 1)
+                            updateQuantity(item.id, item.quantity - 1);
+                          else onDelEvent(item.id);
                         }}
                       >
                         -
                       </button>
                       <div className="flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">
-                        {item.itemQuantity}
+                        {item.quantity}
                       </div>
                       <button
                         className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
                         type="button"
                         onClick={() =>
-                          updateQuantity(item.itemId, item.itemQuantity + 1)
+                          updateQuantity(item.id, item.quantity + 1)
                         }
                       >
                         +
@@ -139,7 +132,7 @@ const ItemForm = memo(({
                 <button
                   type="button"
                   className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900"
-                  onClick={() => onDelEvent(item)}
+                  onClick={() => onDelEvent(item.id)}
                 >
                   <svg
                     className="h-5 w-5"

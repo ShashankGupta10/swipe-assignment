@@ -1,5 +1,6 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectInvoiceList } from "./invoicesSlice";
+import { updateProduct } from "./productsSlice";
 
 export const useInvoiceListData = () => {
   const invoiceList = useSelector(selectInvoiceList);
@@ -23,4 +24,14 @@ export const useInvoiceListData = () => {
 
 export const useGetProducts = () => {
   return useSelector((state) => state.products);
+}
+
+export const useGetProduct = (id) => {
+  const data = useSelector((state) => state.products);
+  return useSelector((state) => state.products.products.find((product) => product.id === id));
+}
+
+export const useUpdateProduct = () => {
+  const dispatch = useDispatch();
+  return (product) => dispatch(updateProduct(product));
 }

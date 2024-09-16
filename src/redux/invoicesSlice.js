@@ -18,7 +18,7 @@ const invoicesSlice = createSlice({
       );
       if (index !== -1) {
         state[index] = action.payload.updatedInvoice;
-      }
+      } 
     },
   },
 });

@@ -1,6 +1,9 @@
 import React, { memo } from "react";
+import { useSelector } from "react-redux";
 
-const FinalDetails = ({ notes, currency, discountRate, taxRate, editField }) => {
+const FinalDetails = ({ editField }) => {
+  const { notes, currency, discountRate, taxRate} = useSelector(state => state.currentInvoice);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 rounded-xl p-4 border">
       <div className="col-span-3">

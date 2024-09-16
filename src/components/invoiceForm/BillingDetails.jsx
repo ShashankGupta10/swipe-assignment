@@ -1,6 +1,8 @@
 import { memo } from "react";
+import { useSelector } from "react-redux";
 
-const BillingDetails = ({ billTo, billToEmail, billToAddress, billFrom, billFromEmail, billFromAddress, editField }) => {
+const BillingDetails = ({ editField }) => {
+  const { billTo, billToEmail, billToAddress, billFrom, billFromEmail, billFromAddress } = useSelector(state => state.currentInvoice);
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-xl p-4 border">
       <div>

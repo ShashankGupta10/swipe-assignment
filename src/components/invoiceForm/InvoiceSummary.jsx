@@ -1,7 +1,9 @@
 import React, { memo } from "react";
 import Button from "../common/Button";
+import { useSelector } from "react-redux";
 
-const InvoiceSummary = ({ currency, subTotal, taxAmount, discountAmount, total, setIsOpen, handleAddInvoice, isEdit }) => {
+const InvoiceSummary = ({ setIsOpen, handleAddInvoice, isEdit }) => {
+  const { currency, subTotal, taxRate, discountRate } = useSelector(state => state.currentInvoice);
   return (
     <div className="text-right flex flex-col gap-4">
       <div>
@@ -9,14 +11,14 @@ const InvoiceSummary = ({ currency, subTotal, taxAmount, discountAmount, total, 
           Subtotal: {currency} {subTotal}
         </p>
         <p className="text-gray-800 text-xl font-medium">
-          Tax: {currency} {taxAmount}
+          Tax: {currency} {(Number(subTotal) * Number(taxRate)) / 100}
         </p>
         <p className="text-gray-800 text-xl font-medium">
-          Discount: {currency} {discountAmount}
+          Discount: {currency} {(Number(subTotal) * Number(discountRate)) / 100}
         </p>
         <hr className="my-2 w-48 block ml-auto" />
         <h2 className="text-gray-800 text-xl font-bold">
-          Total: {currency} {total}
+          Total: {currency} {(Number(subTotal) + (Number(subTotal) * Number(taxRate)) / 100 - (Number(subTotal) * Number(discountRate)) / 100).toFixed(2)}
         </h2>
       </div>
       <div className="flex gap-4 justify-end">

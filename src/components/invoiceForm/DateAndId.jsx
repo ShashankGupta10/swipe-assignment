@@ -1,6 +1,8 @@
 import { memo } from "react";
+import { useSelector } from "react-redux";
 
-const DateAndId = ({ currentDate, dateOfIssue, invoiceNumber, editField }) => {
+const DateAndId = ({ editField }) => {
+  const { dateOfIssue, currentDate, invoiceNumber } = useSelector(state => state.currentInvoice);
   return (
     <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center rounded-xl border p-4">
       <div className="flex flex-col gap-2">

@@ -101,10 +101,9 @@ const productsSlice = createSlice({
     },
     setProducts: (state, action) => {
       state.products = action.payload;
-    },
+    }
   },
 });
 
 export const { addProduct, updateProduct, setProducts } = productsSlice.actions;
-export const getProducts = (state) => state;
 export default productsSlice.reducer;
