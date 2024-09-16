@@ -11,11 +11,11 @@ const ProductsTab = () => {
   };
 
   return (
-    <div className="md:m-4 m-2 p-4 border rounded-xl flex flex-col gap-4">
+    <div className="w-1/3 fixed lg:flex right-0 h-[calc(100vh-25px)] overflow-y-scroll md:m-4 m-2 p-4 border rounded-xl hidden flex-col gap-4 bg-gray-50">
       {data.products.map((product, idx) => {
         return (
           <div
-            className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0 p-4 rounded-xl border cursor-grab"
+            className="flex flex-col space-y-3 py-4 text-left sm:flex-row sm:space-x-5 sm:space-y-0 p-4 rounded-xl border cursor-grab bg-white hover:scale-105"
             key={idx}
             draggable
             onDragStart={(e) => handleDragStart(e, product)}

@@ -1,6 +1,6 @@
-import React from "react";
+import { memo } from "react";
 
-const DateAndId = ({ formData, editField }) => {
+const DateAndId = ({ currentDate, dateOfIssue, invoiceNumber, editField }) => {
   return (
     <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center rounded-xl border p-4">
       <div className="flex flex-col gap-2">
@@ -8,7 +8,7 @@ const DateAndId = ({ formData, editField }) => {
           <span className="font-medium">Current Date:&nbsp;</span>
           <input
             type="text"
-            value={formData.currentDate}
+            value={currentDate}
             className="w-full md:w-auto px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg cursor-not-allowed"
             disabled
           />
@@ -17,7 +17,7 @@ const DateAndId = ({ formData, editField }) => {
           <p className="font-medium">Due Date:</p>
           <input
             type="date"
-            value={formData.dateOfIssue}
+            value={dateOfIssue}
             name="dateOfIssue"
             onChange={editField}
             className="w-full md:w-auto px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
@@ -29,7 +29,7 @@ const DateAndId = ({ formData, editField }) => {
         <span className="font-medium">Invoice Number:&nbsp;</span>
         <input
           type="number"
-          value={formData.invoiceNumber}
+          value={invoiceNumber}
           name="invoiceNumber"
           onChange={editField}
           min="1"
@@ -41,4 +41,4 @@ const DateAndId = ({ formData, editField }) => {
   );
 };
 
-export default DateAndId;
+export default memo(DateAndId);

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { BiCopy, BiSolidPencil, BiTrash } from "react-icons/bi";
 import { BsEyeFill } from "react-icons/bs";
 import Button from "../common/Button";
-import InvoiceModal from "../InvoiceModal";
+import InvoiceModal from "../common/InvoiceModal";
 import { deleteInvoice } from "../../redux/invoicesSlice";
 import DeleteModal from "./DeleteModal";
 
@@ -41,6 +41,10 @@ const InvoiceRow = ({ invoice, navigate, key }) => {
         closeModal={() => setIsOpen(false)}
         info={invoice}
         items={invoice.items}
+        discountAmount={invoice.discountAmount}
+        taxAmount={invoice.taxAmount}
+        total={invoice.total}
+        currency={invoice.currency}
       />
       <DeleteModal id={isDeleteModalOpen} deleteInvoice={deleteInvoice} dispatch={dispatch} setIsDeleteModalOpen={setIsDeleteModalOpen} />
     </>

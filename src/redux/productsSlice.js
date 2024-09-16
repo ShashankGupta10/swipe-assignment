@@ -48,6 +48,38 @@ const initialState = {
     productPrice: 60,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
+  },
+  {
+    id: 7,
+    productName: 'Product 7',
+    productDescription: 'Description of Product 7',
+    productPrice: 70,
+    productQuantity: 1,
+    productImage: 'https://picsum.photos/200',
+  },
+  {
+    id: 8,
+    productName: 'Product 8',
+    productDescription: 'Description of Product 8',
+    productPrice: 80,
+    productQuantity: 1,
+    productImage: 'https://picsum.photos/200',
+  },
+  {
+    id: 9,
+    productName: 'Product 9',
+    productDescription: 'Description of Product 9',
+    productPrice: 90,
+    productQuantity: 1,
+    productImage: 'https://picsum.photos/200',
+  },
+  {
+    id: 10,
+    productName: 'Product 10',
+    productDescription: 'Description of Product 10',
+    productPrice: 100,
+    productQuantity: 1,
+    productImage: 'https://picsum.photos/200',
   }
   ],
 };

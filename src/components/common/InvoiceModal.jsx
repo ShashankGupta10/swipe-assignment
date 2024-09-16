@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from "react";
-import { BiPaperPlane, BiCloudDownload, BiX } from "react-icons/bi";
+import { BiPaperPlane, BiCloudDownload } from "react-icons/bi";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import Button from "./common/Button";
+import Button from "./Button";
 
 const generatePDF = () => {
   html2canvas(document.querySelector("#invoiceCapture")).then((canvas) => {
@@ -21,9 +21,8 @@ const generatePDF = () => {
   });
 };
 
-const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, taxAmount, discountAmount, total }) => {
+const InvoiceModal = ({ showModal, closeModal, info, discountAmount }) => {
   const modalRef = useRef(null);
-  console.log(taxAmount, discountAmount, total);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -43,7 +42,7 @@ const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, 
     <>
       {showModal && (
         <div className="fixed z-10 inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div ref={modalRef} className="bg-white rounded-lg w-full max-w-4xl p-6 py-12 relative">
+          <div ref={modalRef} className="bg-white rounded-xl w-full max-w-4xl px-6 py-12 relative">
             <div id="invoiceCapture" className="space-y-6">
               <div className="flex justify-between items-start bg-gray-100 p-4 rounded-lg">
                 <div>
@@ -51,7 +50,7 @@ const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, 
                     Invoice ID: {info.id || ""}
                   </h6>
                   <h4 className="font-bold text-lg">
-                    {info.billFrom || "John Uberbacher"}
+                    {info.billFrom || "Shashank Gupta"}
                   </h4>
                   <p className="font-bold text-gray-500 mb-1">
                     Invoice No.: {info.invoiceNumber || ""}
@@ -60,7 +59,7 @@ const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, 
                 <div className="text-right">
                   <h6 className="font-bold mt-1 mb-2">Amount Due:</h6>
                   <h5 className="font-bold text-gray-600">
-                    {currency} {total}
+                    {info.currency} {info.total}
                   </h5>
                 </div>
               </div>
@@ -87,24 +86,24 @@ const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, 
               <table className="w-full text-left table-auto">
                 <thead>
                   <tr className="border-b">
-                    <th>QTY</th>
-                    <th>DESCRIPTION</th>
-                    <th className="text-right">PRICE</th>
-                    <th className="text-right">AMOUNT</th>
+                    <th className="px-2">QTY</th>
+                    <th className="px-2">DESCRIPTION</th>
+                    <th className="px-2">PRICE</th>
+                    <th className="px-2">AMOUNT</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((item, i) => (
+                  {info.items.map((item, i) => (
                     <tr key={i}>
-                      <td className="py-2">{item.itemQuantity}</td>
-                      <td>
+                      <td className="py-2 px-2">{item.itemQuantity}</td>
+                      <td className="text-wrap px-2">
                         {item.itemName} - {item.itemDescription}
                       </td>
-                      <td className="text-right">
-                        {currency} {item.itemPrice}
+                      <td className="px-2">
+                        {info.currency} {item.itemPrice}
                       </td>
-                      <td className="text-right">
-                        {currency} {item.itemPrice * item.itemQuantity}
+                      <td className="px-2">
+                        {info.currency} {item.itemPrice * item.itemQuantity}
                       </td>
                     </tr>
                   ))}
@@ -120,21 +119,21 @@ const InvoiceModal = ({ showModal, closeModal, info, items, currency, subTotal, 
                       <tr className="text-right">
                         <td className="font-bold">TAX</td>
                         <td className="text-right">
-                          {currency} {taxAmount}
+                          {info.currency} {info.taxAmount}
                         </td>
                       </tr>
                       {discountAmount !== 0.0 && (
                         <tr className="text-right">
                           <td className="font-bold">DISCOUNT</td>
                           <td className="text-right">
-                            {currency} {discountAmount}
+                            {info.currency} {info.discountAmount}
                           </td>
                         </tr>
                       )}
                       <tr className="text-right">
                         <td className="font-bold">TOTAL</td>
                         <td className="text-right">
-                          {currency} {total}
+                          {info.currency} {info.total}
                         </td>
                       </tr>
                     </tbody>

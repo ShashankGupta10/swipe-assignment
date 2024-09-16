@@ -4,6 +4,7 @@ import Button from "../common/Button";
 
 const InvoicesList = ({ invoiceList }) => {
   const navigate = useNavigate();
+  console.log("hello bro");
   return (
     <div className="max-w-screen-xl">
       <div className="flex justify-end mb-4">
