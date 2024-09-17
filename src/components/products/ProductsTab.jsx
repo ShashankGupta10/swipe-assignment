@@ -10,8 +10,8 @@ const ProductsTab = () => {
   const [_, setDraggedProduct] = useState(null);
   const [editingProductId, setEditingProductId] = useState(null); // Track which product is being edited
   const [editedProduct, setEditedProduct] = useState({}); // Store edited values
-
   const currency = useSelector((state) => state.currentInvoice.currency);
+  const { conversionRate } = useSelector((state) => state.currency);
 
   const handleDragStart = (e, product) => {
     e.dataTransfer.setData("application/json", JSON.stringify(product.id));
@@ -33,7 +33,9 @@ const ProductsTab = () => {
 
   const handleSave = () => {
     console.log(editedProduct);
-    dispatch(updateProduct({id: editedProduct.id, updatedProduct: editedProduct }));
+    dispatch(
+      updateProduct({ id: editedProduct.id, updatedProduct: editedProduct })
+    );
     setEditingProductId(null);
   };
 
@@ -99,7 +101,8 @@ const ProductsTab = () => {
                     />
                   ) : (
                     <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">
-                      {currency} {product.productPrice}
+                      {currency}{" "}
+                      {(product.productPrice * conversionRate).toFixed(2)}
                     </p>
                   )}
                 </div>

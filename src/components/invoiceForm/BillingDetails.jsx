@@ -1,8 +1,10 @@
-import { memo } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateCurrentInvoice } from "../../redux/currentInvoiceSlice";
 
-const BillingDetails = ({ editField }) => {
+const BillingDetails = () => {
+  const dispatch = useDispatch();
   const { billTo, billToEmail, billToAddress, billFrom, billFromEmail, billFromAddress } = useSelector(state => state.currentInvoice);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-xl p-4 border">
       <div>
@@ -13,7 +15,7 @@ const BillingDetails = ({ editField }) => {
           type="text"
           name="billTo"
           className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-          onChange={editField}
+          onChange={(e) => dispatch(updateCurrentInvoice({ billTo: e.target.value }))}
           required
         />
         <input
@@ -22,7 +24,7 @@ const BillingDetails = ({ editField }) => {
           type="email"
           name="billToEmail"
           className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-          onChange={editField}
+          onChange={(e) => dispatch(updateCurrentInvoice({ billToEmail: e.target.value }))}
           required
         />
         <input
@@ -31,7 +33,7 @@ const BillingDetails = ({ editField }) => {
           type="text"
           name="billToAddress"
           className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-          onChange={editField}
+          onChange={(e) => dispatch(updateCurrentInvoice({ billToAddress: e.target.value }))}
           required
         />
       </div>
@@ -43,7 +45,7 @@ const BillingDetails = ({ editField }) => {
           type="text"
           name="billFrom"
           className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-          onChange={editField}
+          onChange={(e) => dispatch(updateCurrentInvoice({ billFrom: e.target.value }))}
           required
         />
         <input
@@ -52,7 +54,7 @@ const BillingDetails = ({ editField }) => {
           type="email"
           name="billFromEmail"
           className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-          onChange={editField}
+          onChange={(e) => dispatch(updateCurrentInvoice({ billFromEmail: e.target.value }))}
           required
         />
         <input
@@ -61,7 +63,7 @@ const BillingDetails = ({ editField }) => {
           type="text"
           name="billFromAddress"
           className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-          onChange={editField}
+          onChange={(e) => dispatch(updateCurrentInvoice({ billFromAddress: e.target.value }))}
           required
         />
       </div>
@@ -69,4 +71,4 @@ const BillingDetails = ({ editField }) => {
   );
 };
 
-export default memo(BillingDetails);
+export default BillingDetails;

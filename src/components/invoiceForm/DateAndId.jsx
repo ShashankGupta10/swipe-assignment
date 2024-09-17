@@ -1,7 +1,8 @@
-import { memo } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateCurrentInvoice } from "../../redux/currentInvoiceSlice";
 
-const DateAndId = ({ editField }) => {
+const DateAndId = () => {
+  const dispatch = useDispatch();
   const { dateOfIssue, currentDate, invoiceNumber } = useSelector(state => state.currentInvoice);
   return (
     <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center rounded-xl border p-4">
@@ -21,7 +22,7 @@ const DateAndId = ({ editField }) => {
             type="date"
             value={dateOfIssue}
             name="dateOfIssue"
-            onChange={editField}
+            onChange={(e) => dispatch(updateCurrentInvoice({ dateOfIssue: e.target.value }))}
             className="w-full md:w-auto px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
             required
           />
@@ -33,7 +34,7 @@ const DateAndId = ({ editField }) => {
           type="number"
           value={invoiceNumber}
           name="invoiceNumber"
-          onChange={editField}
+          onChange={(e) => dispatch(updateCurrentInvoice({ invoiceNumber: e.target.value }))}
           min="1"
           className="w-full md:w-auto px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           required
@@ -43,4 +44,4 @@ const DateAndId = ({ editField }) => {
   );
 };
 
-export default memo(DateAndId);
+export default DateAndId;

@@ -1,8 +1,9 @@
-import React, { memo } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateCurrentInvoice } from "../../redux/currentInvoiceSlice";
 
-const FinalDetails = ({ editField }) => {
-  const { notes, currency, discountRate, taxRate} = useSelector(state => state.currentInvoice);
+const FinalDetails = () => {
+  const dispatch = useDispatch();
+  const { notes, currency, discountRate, taxRate } = useSelector(state => state.currentInvoice);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 rounded-xl p-4 border">
@@ -14,7 +15,7 @@ const FinalDetails = ({ editField }) => {
           name="notes"
           className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
           rows="9"
-          onChange={editField}
+          onChange={(e) => dispatch(updateCurrentInvoice({ notes: e.target.value }))}
         ></textarea>
       </div>
       <div className="flex flex-col gap-5">
@@ -25,7 +26,7 @@ const FinalDetails = ({ editField }) => {
             value={currency || "USD"}
             name="currency"
             className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-            onChange={editField}
+            onChange={(e) => dispatch(updateCurrentInvoice({ currency: e.target.value }))}
           >
             <option value="$">US Dollar</option>
             <option value="₹">Indian Rupee</option>
@@ -44,7 +45,7 @@ const FinalDetails = ({ editField }) => {
             type="number"
             name="discountRate"
             className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-            onChange={editField}
+            onChange={(e) => dispatch(updateCurrentInvoice({ discountRate: e.target.value }))}
           />
         </div>
         <div>
@@ -55,7 +56,7 @@ const FinalDetails = ({ editField }) => {
             type="number"
             name="taxRate"
             className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-            onChange={editField}
+            onChange={(e) => dispatch(updateCurrentInvoice({ taxRate: e.target.value }))}
           />
         </div>
       </div>
@@ -63,4 +64,4 @@ const FinalDetails = ({ editField }) => {
   );
 };
 
-export default memo(FinalDetails);
+export default FinalDetails;

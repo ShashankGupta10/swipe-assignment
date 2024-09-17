@@ -3,28 +3,41 @@ import { BiPlus } from "react-icons/bi";
 import Button from "../common/Button";
 import ProductsModal from "../products/ProductsModal";
 import { useGetProduct } from "../../redux/hooks";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateCurrentInvoice } from "../../redux/currentInvoiceSlice";
 
-const InvoiceItem = (props) => {
-  const {
-    onRowDel,
-    onRowAdd,
-    updateQuantity,
-  } = props;
-
+const InvoiceItem = () => {
+  const dispatch = useDispatch();
+  const formData = useSelector((state) => state.currentInvoice);
   const { currency, items } = useSelector((state) => state.currentInvoice);
   const [openProductModal, setOpenProductModal] = useState(false);
+
   const handleDrop = (e) => {
     e.preventDefault();
     const data = e.dataTransfer.getData("application/json");
     const id = JSON.parse(data);
     const isItemPresent = items.find((i) => i?.id === id);
-    if (isItemPresent) updateQuantity(id, isItemPresent.quantity + 1);
-    else onRowAdd(id);
+    if (isItemPresent)
+      dispatch(
+        updateCurrentInvoice({
+          items: formData.items.map((i) =>
+            i.id === id ? { ...i, quantity: isItemPresent.quantity + 1 } : i
+          ),
+        })
+      );
+    else
+      dispatch(
+        updateCurrentInvoice({
+          items: [...formData.items, { id: id, quantity: 1 }],
+        })
+      );
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border p-4" key={`${Math.random()}`}>
+    <div
+      className="flex flex-col gap-3 rounded-xl border p-4"
+      key={`${Math.random()}`}
+    >
       <div
         className="lg:flex w-full border-indigo-600 border-dashed border-2 h-40 rounded-xl hidden justify-center items-center"
         onDragOver={(e) => e.preventDefault()}
@@ -32,15 +45,10 @@ const InvoiceItem = (props) => {
       >
         <span>DROP PRODUCTS HERE</span>
       </div>
-      {items.length > 0 && items.map((item, idx) => (
-        <ItemForm
-          key={idx}
-          item={item}
-          onDelEvent={onRowDel}
-          currency={currency}
-          updateQuantity={updateQuantity}
-        />
-      ))}
+      {items.length > 0 &&
+        items.map((item, idx) => (
+          <ItemForm key={idx} item={item} currency={currency} />
+        ))}
       <span>
         <Button
           onClick={() => setOpenProductModal(true)}
@@ -58,16 +66,52 @@ const InvoiceItem = (props) => {
   );
 };
 
-export default memo(InvoiceItem);
+export default InvoiceItem;
 
-const ItemForm = memo(({
-  key,
-  item,
-  onDelEvent,
-  currency,
-  updateQuantity,
-}) => {
+const ItemForm = memo(({ key, item, currency }) => {
   const itemData = useGetProduct(item.id);
+  const dispatch = useDispatch();
+  const { conversionRate } = useSelector((state) => state.currency);
+  const formData = useSelector((state) => state.currentInvoice);
+
+  const handleAddItem = () => {
+    dispatch(
+      updateCurrentInvoice({
+        items: formData.items.map((i) =>
+          i.id === item.id
+            ? {
+                ...i,
+                quantity: item.quantity + 1,
+              }
+            : i
+        ),
+      })
+    );
+  };
+
+  const handleSubtractItem = (e) => {
+    e.target.value = item.quantity - 1;
+    if (item.quantity > 1)
+      dispatch(
+        updateCurrentInvoice({
+          items: formData.items.map((i) =>
+            i.id === item.id
+              ? {
+                  ...i,
+                  quantity: item.quantity - 1,
+                }
+              : i
+          ),
+        })
+      );
+    else
+      dispatch(
+        updateCurrentInvoice({
+          items: formData.items.filter((i) => i.id !== item.id),
+        })
+      );
+  };
+
   return (
     <section key={key}>
       <div className="flow-root">
@@ -94,7 +138,8 @@ const ItemForm = memo(({
 
                 <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
                   <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">
-                    {currency} {itemData.productPrice}
+                    {currency}{" "}
+                    {(itemData.productPrice * conversionRate).toFixed(2)}
                   </p>
 
                   <div className="sm:order-1">
@@ -102,12 +147,7 @@ const ItemForm = memo(({
                       <button
                         className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
                         type="button"
-                        onClick={(e) => {
-                          e.target.value = item.quantity - 1;
-                          if (item.quantity > 1)
-                            updateQuantity(item.id, item.quantity - 1);
-                          else onDelEvent(item.id);
-                        }}
+                        onClick={handleSubtractItem}
                       >
                         -
                       </button>
@@ -117,9 +157,7 @@ const ItemForm = memo(({
                       <button
                         className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
                         type="button"
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
-                        }
+                        onClick={handleAddItem}
                       >
                         +
                       </button>

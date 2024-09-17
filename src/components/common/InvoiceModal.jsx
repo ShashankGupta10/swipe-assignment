@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useMemo, useState } from "react";
 import { BiPaperPlane, BiCloudDownload } from "react-icons/bi";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -25,10 +25,13 @@ const generatePDF = () => {
 
 const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
   const { invoiceList } = useInvoiceListData();
-  const info = invoiceId ? invoiceList.find(inv => inv.id === invoiceId) : useSelector((state) => state.currentInvoice);
-  const modalRef = useRef(null);
   const { products } = useGetProducts()
-
+  const { conversionRate } = useSelector((state) => state.currency);
+  const { total } = useSelector((state) => state.currentInvoice);
+  
+  const modalRef = useRef(null);
+  const info = invoiceId ? invoiceList.find(inv => inv.id === invoiceId) : useSelector((state) => state.currentInvoice);
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -42,17 +45,6 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showModal, closeModal]);
-
-  const handleCalculateTotal = () => {
-    let total = 0;
-    info.items.forEach((item) => {
-      const product = products.find((p) => p.id === item.id);
-      total += product.productPrice * item.quantity;
-    });
-
-    total += (Number(info.taxRate) * Number(total)) / 100 - (Number(info.discountRate) * Number(total)) / 100;
-    return total;
-  };
 
   const items = useMemo(() => {
     return info.items.map((item) => {
@@ -90,7 +82,7 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
                 <div className="text-right">
                   <h6 className="font-bold mt-1 mb-2">Amount Due:</h6>
                   <h5 className="font-bold text-gray-600">
-                    {info.currency} {handleCalculateTotal().toFixed(2)}
+                    {info.currency} {Number(total).toFixed(2)}
                   </h5>
                 </div>
               </div>
@@ -132,10 +124,10 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
                           {item.productName} - {item.productDescription}  
                         </td>
                         <td className="px-2">
-                          {item.currency} {item.productPrice}
+                          {item.currency} {(item.productPrice * conversionRate).toFixed(2)}
                         </td>
                         <td className="px-2">
-                          {info.currency} {item.productPrice * item.quantity}
+                          {info.currency} {(item.productPrice * conversionRate * item.quantity).toFixed(2)}
                         </td>
                       </tr>
                     );
@@ -152,21 +144,21 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
                       <tr className="text-right">
                         <td className="font-bold">TAX</td>
                         <td className="text-right">
-                          {info.currency} {((info.taxRate * handleCalculateTotal()) / 100).toFixed(2)}
+                          {info.currency} {((info.taxRate * total) / 100).toFixed(2)}
                         </td>
                       </tr>
                       {info.discountRate !== 0.0 && (
                         <tr className="text-right">
                           <td className="font-bold">DISCOUNT</td>
                           <td className="text-right">
-                            {info.currency} {((info.discountRate * handleCalculateTotal()) / 100).toFixed(2)}
+                            {info.currency} {((info.discountRate * total) / 100).toFixed(2)}
                           </td>
                         </tr>
                       )}
                       <tr className="text-right">
                         <td className="font-bold">TOTAL</td>
                         <td className="text-right">
-                          {info.currency} {handleCalculateTotal().toFixed(2)}
+                          {info.currency} {Number(total).toFixed(2)}
                         </td>
                       </tr>
                     </tbody>

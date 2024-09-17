@@ -31,13 +31,6 @@ const currentInvoiceSlice = createSlice({
         updateCurrentInvoice: (state, action) => {
             return { ...state, ...action.payload };
         },
-        resetCurrentInvoice: (_) => {
-            return {
-                ...initialState,
-                id: generateRandomId(),
-                currentDate: new Date().toLocaleDateString(),
-            };
-        },
         initializeCurrentInvoice: (_, action) => {
             const { invoiceNumber } = action.payload;
             const id = generateRandomId();
@@ -49,7 +42,6 @@ const currentInvoiceSlice = createSlice({
 
 export const { 
     updateCurrentInvoice, 
-    resetCurrentInvoice, 
     initializeCurrentInvoice
 } = currentInvoiceSlice.actions;
 export default currentInvoiceSlice.reducer;

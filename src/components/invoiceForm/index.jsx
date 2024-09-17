@@ -18,8 +18,8 @@ import {
   initializeCurrentInvoice,
   updateCurrentInvoice,
 } from "../../redux/currentInvoiceSlice";
-import { updateProduct } from "../../redux/productsSlice";
 import { currencyMap } from "../../utils/currencyMap";
+import { getCurrencyRates, setTargetCurrency } from "../../redux/currencySlice";
 
 const InvoiceForm = () => {
   const dispatch = useDispatch();
@@ -28,9 +28,9 @@ const InvoiceForm = () => {
   const navigate = useNavigate();
   const isCopy = location.pathname.includes("create");
   const isEdit = location.pathname.includes("edit");
-  const data = useGetProducts();
   const formData = useSelector((state) => state.currentInvoice);
-  const products = useSelector((state) => state.products);
+  const { products } = useGetProducts();
+  const { conversionRate } = useSelector((state) => state.currency);
 
   const [isOpen, setIsOpen] = useState(false);
   const { getOneInvoice, listSize } = useInvoiceListData();
@@ -50,123 +50,35 @@ const InvoiceForm = () => {
       );
     } else {
       dispatch(initializeCurrentInvoice({ invoiceNumber: listSize + 1 }));
-      // dispatch(resetProducts());
     }
   }, [params.id]);
 
   useEffect(() => {
-    handleCalculateTotal();
-  }, [formData.items, formData.taxRate, formData.discountRate, data.products]);
-
-  const handleRowDel = useCallback(
-    (itemToDelete) => {
-      const updatedItems = formData.items.filter(
-        (item) => item.id !== itemToDelete
-      );
-      dispatch(updateCurrentInvoice({ items: updatedItems }));
-    },
-    [formData.items]
-  );
-
-  const handleAddEvent = useCallback(
-    (itemId) => {
-      dispatch(
-        updateCurrentInvoice({
-          items: [...formData.items, { id: itemId, quantity: 1 }],
-        })
-      );
-    },
-    [formData]
-  );
+    dispatch(setTargetCurrency(currencyMap[formData.currency]));
+    dispatch(getCurrencyRates(currencyMap[formData.currency]));
+  }, [formData.currency]);
 
   const handleCalculateTotal = () => {
-    let subTotal = 0;
+    let subTotalValue = 0;
     formData.items.forEach((item) => {
-      const product = data.products.find((p) => p.id === item.id);
-      subTotal += product.productPrice * item.quantity;
+      const product = products.find((p) => p.id === item.id);
+      subTotalValue += product.productPrice * conversionRate * item.quantity;
     });
-    const taxAmount = (subTotal * (formData.taxRate / 100)).toFixed(2);
-    const discountAmount = (subTotal * (formData.discountRate / 100)).toFixed(
-      2
-    );
-    const total = (
-      subTotal -
-      parseFloat(discountAmount) +
-      parseFloat(taxAmount)
-    ).toFixed(2);
 
-    dispatch(
-      updateCurrentInvoice({
-        subTotal: subTotal.toFixed(2),
-        taxAmount,
-        discountAmount,
-        total,
-      })
-    );
+    const totalValue = subTotalValue +
+      (Number(formData.taxRate) * Number(subTotalValue)) / 100 -
+      (Number(formData.discountRate) * Number(subTotalValue)) / 100;
+    return { subTotalValue, totalValue };
   };
 
-  // const onItemizedItemEdit = useCallback((evt, id) => {
-  //   console.log(evt, id);
-  //   const updatedItems = formData.items.map((oldItem) => {
-  //     console.log(oldItem.itemId, id);
-  //     if (oldItem.itemId === id) {
-  //       if (evt.target) return { ...oldItem, [evt.target.name]: evt.target.value };
-  //       else return { ...oldItem, itemQuantity: oldItem.itemQuantity + 1 };
-  //     }
-  //     return oldItem;
-  //   });
-  //   setFormData({ ...formData, items: updatedItems });
-  // }, [formData.items]);
-
-  const updateQuantity = useCallback(
-    (id, quantity) => {
-      const updatedItems = formData.items.map((item) => {
-        if (item.id === id) {
-          return { ...item, quantity: quantity };
-        }
-        return item;
-      });
-      dispatch(updateCurrentInvoice({ items: updatedItems }));
-    },
-    [formData]
-  );
-
-  const handleChange = useCallback(
-    async (e) => {
-      dispatch(
-        updateCurrentInvoice({
-          ...formData,
-          [e.target.name]: e.target.value,
-        })
-      );
-
-      // if (e.target.name === "currency") {
-      //   const response = await fetch(`https://api.freecurrencyapi.com/v1/latest?base_currency=USD&currencies=${currencyMap[e.target.value]}&apikey=fca_live_Vgab5S9zZ9wLi7DuX40hZ5KMhZ5Vn8oIxvb5WJq6`)
-      //   const data = await response.json();
-      //   const currencyVal = data.data[currencyMap[e.target.value]];
-      //   products.products.forEach((product) => {
-      //     const price = product.productPriceInUSD;
-      //     const convertedPrice = (Number(price) * currencyVal).toFixed(2);
-      //     dispatch(updateProduct({ id: product.id, updatedProduct: { productPrice: convertedPrice } }));
-      //   });
-      // }
-    },
-    [formData]
-  );
-
-  const handleAddInvoice = useCallback(() => {
-    if (isEdit) {
-      console.log(params.id, formData);
-      const resp = dispatch(updateInvoice({ id: formData.id, updatedInvoice: formData }));
-      console.log(resp);
-      toast.success("Invoice updated successfully 🥳");
-    } else {
-      dispatch(addInvoice(formData));
-      // dispatch(resetProducts());
-      toast.success("Invoice added successfully 🥳");
-    }
-    navigate("/");
-  }, [formData]);
+  useEffect(() => {
+    dispatch(
+      updateCurrentInvoice({
+        total: handleCalculateTotal().totalValue.toFixed(2),
+        subTotal: handleCalculateTotal().subTotalValue.toFixed(2),
+      })
+    );
+  }, [formData.items, formData.taxRate, formData.discountRate]);
 
   return (
     <form
@@ -180,16 +92,11 @@ const InvoiceForm = () => {
       <div className="grid grid-cols-1 gap-4 py-6">
         <div className="md:col-span-6">
           <div className="bg-white flex flex-col gap-4">
-            <DateAndId editField={handleChange} />
-            <BillingDetails editField={handleChange} />
-            <InvoiceItem
-              onRowDel={handleRowDel}
-              onRowAdd={handleAddEvent}
-              updateQuantity={updateQuantity}
-            />
-            <FinalDetails editField={handleChange} />
+            <DateAndId />
+            <BillingDetails />
+            <InvoiceItem />
+            <FinalDetails />
             <InvoiceSummary
-              handleAddInvoice={handleAddInvoice}
               setIsOpen={setIsOpen}
               isEdit={isEdit}
             />
@@ -197,12 +104,7 @@ const InvoiceForm = () => {
         </div>
       </div>
 
-      <InvoiceModal
-        showModal={isOpen}
-        closeModal={setIsOpen}
-        // invoiceId={formData}
-        // total={formData.total}
-      />
+      <InvoiceModal showModal={isOpen} closeModal={setIsOpen} />
     </form>
   );
 };

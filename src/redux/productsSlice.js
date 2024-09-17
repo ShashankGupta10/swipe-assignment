@@ -5,7 +5,7 @@ const initialState = {
     id: 1,
     productName: 'Product 1',
     productDescription: 'Description of Product 1',
-    productPrice: 10,
+    productPrice: 2,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
   },
@@ -13,7 +13,7 @@ const initialState = {
     id: 2,
     productName: 'Product 2',
     productDescription: 'Description of Product 2',
-    productPrice: 20,
+    productPrice: 3,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
   },
@@ -21,7 +21,7 @@ const initialState = {
     id: 3,
     productName: 'Product 3',
     productDescription: 'Description of Product 3',
-    productPrice: 30,
+    productPrice: 4,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
   },
@@ -29,7 +29,7 @@ const initialState = {
     id: 4,
     productName: 'Product 4',
     productDescription: 'Description of Product 4',
-    productPrice: 40,
+    productPrice: 5,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
   },
@@ -37,7 +37,7 @@ const initialState = {
     id: 5,
     productName: 'Product 5',
     productDescription: 'Description of Product 5',
-    productPrice: 50,
+    productPrice: 6,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
   },
@@ -45,7 +45,7 @@ const initialState = {
     id: 6,
     productName: 'Product 6',
     productDescription: 'Description of Product 6',
-    productPrice: 60,
+    productPrice: 7,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
   },
@@ -53,7 +53,7 @@ const initialState = {
     id: 7,
     productName: 'Product 7',
     productDescription: 'Description of Product 7',
-    productPrice: 70,
+    productPrice: 8,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
   },
@@ -61,7 +61,7 @@ const initialState = {
     id: 8,
     productName: 'Product 8',
     productDescription: 'Description of Product 8',
-    productPrice: 80,
+    productPrice: 9,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
   },
@@ -69,7 +69,7 @@ const initialState = {
     id: 9,
     productName: 'Product 9',
     productDescription: 'Description of Product 9',
-    productPrice: 90,
+    productPrice: 10,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
   },
@@ -77,7 +77,7 @@ const initialState = {
     id: 10,
     productName: 'Product 10',
     productDescription: 'Description of Product 10',
-    productPrice: 100,
+    productPrice: 11,
     productQuantity: 1,
     productImage: 'https://picsum.photos/200',
   }
@@ -88,9 +88,6 @@ const productsSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {
-    addProduct: (state, action) => {
-      state.products.push(action.payload);
-    },
     updateProduct: (state, action) => {
       const index = state.products.findIndex(
         (product) => product.id === action.payload.id
@@ -99,11 +96,8 @@ const productsSlice = createSlice({
         state.products[index] = { ...state.products[index], ...action.payload.updatedProduct };
       }
     },
-    setProducts: (state, action) => {
-      state.products = action.payload;
-    }
   },
 });
 
-export const { addProduct, updateProduct, setProducts } = productsSlice.actions;
+export const { updateProduct } = productsSlice.actions;
 export default productsSlice.reducer;

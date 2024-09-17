@@ -1,7 +1,12 @@
+import { useSelector } from "react-redux";
 import { useGetProducts } from "../../redux/hooks";
+import Button from "../common/Button";
+import { FaPlus } from "react-icons/fa";
 
 const ProductsModal = ({ showModal, closeModal }) => {
   const data = useGetProducts();
+  const currency = useSelector((state) => state.currentInvoice.currency);
+  const { conversionRate } = useSelector((state) => state.currency);
 
   return (
     <div className="lg:hidden">
@@ -18,7 +23,7 @@ const ProductsModal = ({ showModal, closeModal }) => {
               {data.products.map((product, idx) => (
                 <div
                   key={idx}
-                  className="flex text-left flex-row space-x-5 space-y-0 p-4 rounded-xl border cursor-pointer bg-gray-50"                  
+                  className="flex text-left flex-row space-x-5 space-y-0 p-4 rounded-xl border cursor-pointer bg-gray-50"
                 >
                   <div className="shrink-0">
                     <img
@@ -41,9 +46,18 @@ const ProductsModal = ({ showModal, closeModal }) => {
 
                       <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
                         <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">
-                          $ {product.productPrice}
+                          {currency}{" "}
+                          {(product.productPrice * conversionRate).toFixed(2)}
                         </p>
                       </div>
+                    </div>
+                    <div className="ml-auto">
+                      <Button
+                        className="mt-4 w-44 sm:w-auto"
+                        onClick={() => console.log("Add item")}
+                      >
+                        <FaPlus /> Add Item
+                      </Button>
                     </div>
                   </div>
                 </div>
