@@ -7,17 +7,6 @@ const invoicesSlice = createSlice({
   initialState: [],
   reducers: {
     addInvoice: (state, action) => {
-      // const { data, success, error } = invoiceSchema.safeParse(action.payload);
-      // if (success) {
-      //   toast.success("Invoice added successfully 🥳");
-      //   state.push(data);
-      //   return true
-      // } else {
-      //   console.log(error);
-      //   const errorMessage = error.issues?.[0]?.message || "An error occurred";
-      //   toast.error(`Failed to add invoice: ${errorMessage}`);
-      //   return false
-      // }
       state.push(action.payload);
       toast.success("Invoice added successfully 🥳");
     },
@@ -26,6 +15,7 @@ const invoicesSlice = createSlice({
       return state.filter((invoice) => invoice.id !== action.payload);
     },
     updateInvoice: (state, action) => {
+      toast.success("Invoice updated successfully 🥳");
       return state.map((invoice) =>
         invoice.id === action.payload.id
           ? { ...invoice, ...action.payload.updatedInvoice }

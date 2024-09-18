@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 
 const initialState = {
   products: [{
@@ -95,6 +96,7 @@ const productsSlice = createSlice({
       if (index !== -1) {
         state.products[index] = { ...state.products[index], ...action.payload.updatedProduct };
       }
+      toast.success('Product updated successfully 🥳');
     },
   },
 });

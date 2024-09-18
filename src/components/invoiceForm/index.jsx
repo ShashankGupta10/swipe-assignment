@@ -32,6 +32,7 @@ const InvoiceForm = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { getOneInvoice, listSize } = useInvoiceListData();
 
+  // Calculate total and subTotal for all the items in the invoice
   const handleCalculateTotal = () => {
     let subTotalValue = 0;
     formData.items.forEach((item) => {
@@ -45,6 +46,7 @@ const InvoiceForm = () => {
     return { subTotalValue, totalValue };
   };
 
+  // Initialize the current Invouce based on the route and params
   useEffect(() => {
     if (isEdit) {
       const invoice = getOneInvoice(params.id);
@@ -63,11 +65,13 @@ const InvoiceForm = () => {
     }
   }, [params.id]);
 
+  // Handle the currency change and update the currency rates
   useEffect(() => {
     dispatch(setTargetCurrency(currencyMap[formData.currency]));
     dispatch(getCurrencyRates(currencyMap[formData.currency]));
   }, [products, formData]);
 
+  // Update the total and subTotal values based on the items, taxRate, discountRate and currency
   useEffect(() => {
     dispatch(
       updateCurrentInvoice({

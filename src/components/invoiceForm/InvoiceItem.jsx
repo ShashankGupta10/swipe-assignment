@@ -5,6 +5,7 @@ import ProductsModal from "../products/ProductsModal";
 import { useGetProduct } from "../../redux/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCurrentInvoice } from "../../redux/currentInvoiceSlice";
+import { FaDropbox } from "react-icons/fa";
 
 const InvoiceItem = () => {
   const dispatch = useDispatch();
@@ -39,11 +40,12 @@ const InvoiceItem = () => {
       key={`${Math.random()}`}
     >
       <div
-        className="lg:flex w-full border-indigo-600 border-dashed border-2 h-40 rounded-xl hidden justify-center items-center"
+        className="lg:flex gap-8 w-full border-indigo-600 border-dashed border-2 h-40 rounded-xl hidden justify-center items-center"
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
       >
-        <span>DROP PRODUCTS HERE</span>
+        <FaDropbox className="w-12 h-12 text-indigo-600" />
+        <span className="text-xl">Drag Products from products tab and drop here</span>
       </div>
       {items.length > 0 &&
         items.map((item, idx) => (

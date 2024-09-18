@@ -8,7 +8,7 @@ const FinalDetails = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 rounded-xl p-4 border">
       <div className="col-span-3">
-        <label className="font-bold">Notes</label>
+        <label className="font-medium">Notes</label>
         <textarea
           placeholder="Notes - any relevant information not already covered"
           value={notes}
@@ -20,7 +20,7 @@ const FinalDetails = () => {
       </div>
       <div className="flex flex-col gap-5">
         <div>
-          <label className="font-bold">Currency</label>
+          <label className="font-medium">Currency</label>
           <select
             placeholder="Currency"
             value={currency || "USD"}
@@ -38,7 +38,7 @@ const FinalDetails = () => {
           </select>
         </div>
         <div>
-          <label className="font-bold">Discount (%)</label>
+          <label className="font-medium">Discount (%)</label>
           <input
             placeholder="Enter discount"
             value={discountRate}
@@ -49,7 +49,7 @@ const FinalDetails = () => {
           />
         </div>
         <div>
-          <label className="font-bold">Tax (%)</label>
+          <label className="font-medium">Tax (%)</label>
           <input
             placeholder="Enter tax"
             value={taxRate}

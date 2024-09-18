@@ -19,6 +19,7 @@ const InvoiceSummary = ({ setIsOpen, isEdit }) => {
         return;
       }
       dispatch(updateInvoice({ id: data.id, updatedInvoice: data }));
+      navigate("/");
     } else {
       const { success, data, error } = invoiceSchema.safeParse(formData);
       if (!success) {
@@ -51,7 +52,7 @@ const InvoiceSummary = ({ setIsOpen, isEdit }) => {
           ).toFixed(2)}
         </p>
         <hr className="my-2 w-48 block ml-auto" />
-        <h2 className="text-gray-800 text-xl font-bold">
+        <h2 className="text-gray-800 text-xl font-medium">
           Total: {formData.currency} {Number(formData.total * conversionRate).toFixed(2)}
         </h2>
       </div>

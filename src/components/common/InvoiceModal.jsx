@@ -25,13 +25,22 @@ const generatePDF = () => {
 
 const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
   const { invoiceList } = useInvoiceListData();
-  const { products } = useGetProducts()
+  const { products } = useGetProducts();
   const { conversionRate } = useSelector((state) => state.currency);
-  const { total } = useSelector((state) => state.currentInvoice);
-  
+  const { total, billToEmail } = useSelector((state) => state.currentInvoice);
+
   const modalRef = useRef(null);
-  const info = invoiceId ? invoiceList.find(inv => inv.id === invoiceId) : useSelector((state) => state.currentInvoice);
-  
+  const info = invoiceId
+    ? invoiceList.find((inv) => inv.id === invoiceId)
+    : useSelector((state) => state.currentInvoice);
+
+  const sendInvoice = () => {
+    generatePDF();
+    window.open(
+      `mailto:${billToEmail}?subject=Invoice&body=Please find the attached invoice for your reference.`
+    );
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -51,8 +60,8 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
       const product = products.find((p) => p.id === item.id);
       return {
         ...item,
-        productName: product ? product.productName : '',
-        productDescription: product ? product.productDescription : '',
+        productName: product ? product.productName : "",
+        productDescription: product ? product.productDescription : "",
         productPrice: product ? product.productPrice : 0,
       };
     });
@@ -69,19 +78,19 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
             <div id="invoiceCapture" className="space-y-6">
               <div className="flex justify-between items-start bg-gray-100 p-4 rounded-lg">
                 <div>
-                  <h6 className="font-bold text-gray-500 mb-1">
+                  <h6 className="font-medium text-gray-500 mb-1">
                     Invoice ID: {info.id || ""}
                   </h6>
-                  <h4 className="font-bold text-lg">
+                  <h4 className="font-medium text-lg">
                     {info.billFrom || "Shashank Gupta"}
                   </h4>
-                  <p className="font-bold text-gray-500 mb-1">
+                  <p className="font-medium text-gray-500 mb-1">
                     Invoice No.: {info.invoiceNumber || ""}
                   </p>
                 </div>
                 <div className="text-right">
-                  <h6 className="font-bold mt-1 mb-2">Amount Due:</h6>
-                  <h5 className="font-bold text-gray-600">
+                  <h6 className="font-medium mt-1 mb-2">Amount Due:</h6>
+                  <h5 className="font-medium text-gray-600">
                     {info.currency} {Number(total * conversionRate).toFixed(2)}
                   </h5>
                 </div>
@@ -89,19 +98,19 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <p className="font-bold">Billed to:</p>
+                  <p className="font-medium">Billed to:</p>
                   <p>{info.billTo || ""}</p>
                   <p>{info.billToAddress || ""}</p>
                   <p>{info.billToEmail || ""}</p>
                 </div>
                 <div>
-                  <p className="font-bold">Billed From:</p>
+                  <p className="font-medium">Billed From:</p>
                   <p>{info.billFrom || ""}</p>
                   <p>{info.billFromAddress || ""}</p>
                   <p>{info.billFromEmail || ""}</p>
                 </div>
                 <div>
-                  <p className="font-bold">Date Of Issue:</p>
+                  <p className="font-medium">Date Of Issue:</p>
                   <p>{info.dateOfIssue || ""}</p>
                 </div>
               </div>
@@ -121,13 +130,19 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
                       <tr key={i}>
                         <td className="py-2 px-2">{item.quantity}</td>
                         <td className="text-wrap px-2">
-                          {item.productName} - {item.productDescription}  
+                          {item.productName} - {item.productDescription}
                         </td>
                         <td className="px-2">
-                          {item.currency} {(item.productPrice * conversionRate).toFixed(2)}
+                          {item.currency}{" "}
+                          {(item.productPrice * conversionRate).toFixed(2)}
                         </td>
                         <td className="px-2">
-                          {info.currency} {(item.productPrice * conversionRate * item.quantity).toFixed(2)}
+                          {info.currency}{" "}
+                          {(
+                            item.productPrice *
+                            conversionRate *
+                            item.quantity
+                          ).toFixed(2)}
                         </td>
                       </tr>
                     );
@@ -142,23 +157,32 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
                   <table className="w-full">
                     <tbody>
                       <tr className="text-right">
-                        <td className="font-bold">TAX</td>
+                        <td className="font-medium">TAX</td>
                         <td className="text-right">
-                          {info.currency} {((info.taxRate * total * conversionRate) / 100).toFixed(2)}
+                          {info.currency}{" "}
+                          {(
+                            (info.taxRate * total * conversionRate) /
+                            100
+                          ).toFixed(2)}
                         </td>
                       </tr>
                       {info.discountRate !== 0.0 && (
                         <tr className="text-right">
-                          <td className="font-bold">DISCOUNT</td>
+                          <td className="font-medium">DISCOUNT</td>
                           <td className="text-right">
-                            {info.currency} {((info.discountRate * total * conversionRate) / 100).toFixed(2)}
+                            {info.currency}{" "}
+                            {(
+                              (info.discountRate * total * conversionRate) /
+                              100
+                            ).toFixed(2)}
                           </td>
                         </tr>
                       )}
                       <tr className="text-right">
-                        <td className="font-bold">TOTAL</td>
+                        <td className="font-medium">TOTAL</td>
                         <td className="text-right">
-                          {info.currency} {Number(total * conversionRate).toFixed(2)}
+                          {info.currency}{" "}
+                          {Number(total * conversionRate).toFixed(2)}
                         </td>
                       </tr>
                     </tbody>
@@ -172,7 +196,7 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-              <Button onClick={generatePDF} type={"button"}>
+              <Button onClick={sendInvoice} type={"button"}>
                 <BiPaperPlane className="mr-2 w-8 h-8" />
                 <span>Send Invoice</span>
               </Button>
