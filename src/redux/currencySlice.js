@@ -26,7 +26,11 @@ export const getCurrencyRates = createAsyncThunk(
 const currencySlice = createSlice({
   name: "currency",
   initialState,
-  reducers: {},
+  reducers: {
+    setTargetCurrency(state, action) {
+      state.targetCurrency = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getCurrencyRates.pending, (state) => {
@@ -43,5 +47,7 @@ const currencySlice = createSlice({
       });
   },
 });
+
+export const { setTargetCurrency } = currencySlice.actions;
 
 export default currencySlice.reducer;

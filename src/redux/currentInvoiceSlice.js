@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import generateRandomId from "../utils/generateRandomId";
+import { toast } from "react-toastify";
+import { invoiceSchema } from "../utils/invoiceSchema";
 
 const initialState = {
     id: generateRandomId(),
@@ -21,7 +23,6 @@ const initialState = {
     discountAmount: "0.00",
     currency: "$",
     items: [],
-    products: [],
 };
 
 const currentInvoiceSlice = createSlice({

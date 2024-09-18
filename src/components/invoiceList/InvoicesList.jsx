@@ -25,7 +25,6 @@ const InvoicesList = ({ invoiceList }) => {
               <InvoiceRow
                 key={invoice.id}
                 invoice={invoice}
-                navigate={navigate}
               />
             ))}
           </tbody>

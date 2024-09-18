@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FaEdit, FaSave } from "react-icons/fa"; // Import edit and save icons
 import { useDispatch, useSelector } from "react-redux";
 import { updateProduct } from "../../redux/productsSlice";
+import { productSchema } from "../../utils/productSchema";
 
 const ProductsTab = () => {
   const { products } = useGetProducts();
@@ -32,9 +33,13 @@ const ProductsTab = () => {
   };
 
   const handleSave = () => {
-    console.log(editedProduct);
+    const { success, data, error } = productSchema.safeParse(editedProduct);
+    if (!success) {
+      toast.error(`Failed to edit product: ${error.issues?.[0]?.message || "An error occurred"}`);
+      return;
+    }
     dispatch(
-      updateProduct({ id: editedProduct.id, updatedProduct: editedProduct })
+      updateProduct({ id: data.id, updatedProduct: data })
     );
     setEditingProductId(null);
   };
@@ -96,7 +101,7 @@ const ProductsTab = () => {
                       className="w-full px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                       type="number"
                       name="productPrice"
-                      value={editedProduct.productPrice}
+                      value={(editedProduct.productPrice * conversionRate).toFixed(2)}
                       onChange={handleInputChange}
                     />
                   ) : (

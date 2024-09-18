@@ -3,50 +3,56 @@ import { useDispatch, useSelector } from "react-redux";
 import { addInvoice, updateInvoice } from "../../redux/invoicesSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { invoiceSchema } from "../../utils/invoiceSchema";
 
 const InvoiceSummary = ({ setIsOpen, isEdit }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { currency, subTotal, taxRate, discountRate, total } = useSelector(
-    (state) => state.currentInvoice
-  );
   const formData = useSelector((state) => state.currentInvoice);
   const { conversionRate } = useSelector((state) => state.currency);
 
-  const handleAddInvoice = () => {
+  const handleAddInvoice = () => {  
     if (isEdit) {
-      dispatch(updateInvoice({ id: formData.id, updatedInvoice: formData }));
-      toast.success("Invoice updated successfully 🥳");
+      const { success, data, error } = invoiceSchema.safeParse(formData);
+      if (!success) {
+        toast.error(`Failed to update invoice: ${error.issues?.[0]?.message || "An error occurred"}`);
+        return;
+      }
+      dispatch(updateInvoice({ id: data.id, updatedInvoice: data }));
     } else {
-      dispatch(addInvoice(formData));
-      toast.success("Invoice added successfully 🥳");
+      const { success, data, error } = invoiceSchema.safeParse(formData);
+      if (!success) {
+        toast.error(`Failed to add invoice: ${error.issues?.[0]?.message || "An error occurred"}`);
+        return;
+      }
+      dispatch(addInvoice(data));
+      navigate("/");
     }
-    navigate("/");
   };
 
   return (
     <div className="text-right flex flex-col gap-4">
       <div>
         <p className="text-gray-800 text-xl font-medium">
-          Subtotal: {currency} {Number(subTotal).toFixed(2)}
+          Subtotal: {formData.currency} {Number(formData.subTotal * conversionRate).toFixed(2)}
         </p>
         <p className="text-gray-800 text-xl font-medium">
-          Tax: {currency}{" "}
+          Tax: {formData.currency}{" "}
           {(
-            (Number(subTotal) * Number(taxRate)) /
+            (Number(formData.subTotal * conversionRate) * Number(formData.taxRate)) /
             100
           ).toFixed(2)}
         </p>
         <p className="text-gray-800 text-xl font-medium">
-          Discount: {currency}{" "}
+          Discount: {formData.currency}{" "}
           {(
-            (Number(subTotal * conversionRate) * Number(discountRate)) /
+            (Number(formData.subTotal * conversionRate) * Number(formData.discountRate)) /
             100
           ).toFixed(2)}
         </p>
         <hr className="my-2 w-48 block ml-auto" />
         <h2 className="text-gray-800 text-xl font-bold">
-          Total: {currency} {Number(total).toFixed(2)}
+          Total: {formData.currency} {Number(formData.total * conversionRate).toFixed(2)}
         </h2>
       </div>
       <div className="flex gap-4 justify-end">

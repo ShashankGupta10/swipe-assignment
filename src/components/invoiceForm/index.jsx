@@ -1,9 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import { addInvoice, updateInvoice } from "./../../redux/invoicesSlice";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useGetProducts, useInvoiceListData } from "./../../redux/hooks";
 
 import generateRandomId from "./../../utils/generateRandomId";
@@ -30,10 +28,22 @@ const InvoiceForm = () => {
   const isEdit = location.pathname.includes("edit");
   const formData = useSelector((state) => state.currentInvoice);
   const { products } = useGetProducts();
-  const { conversionRate } = useSelector((state) => state.currency);
 
   const [isOpen, setIsOpen] = useState(false);
   const { getOneInvoice, listSize } = useInvoiceListData();
+
+  const handleCalculateTotal = () => {
+    let subTotalValue = 0;
+    formData.items.forEach((item) => {
+      const product = products.find((p) => p.id === item.id);
+      subTotalValue += product.productPrice * item.quantity;
+    });
+
+    const totalValue = subTotalValue +
+      (Number(formData.taxRate) * Number(subTotalValue)) / 100 -
+      (Number(formData.discountRate) * Number(subTotalValue)) / 100;
+    return { subTotalValue, totalValue };
+  };
 
   useEffect(() => {
     if (isEdit) {
@@ -56,20 +66,7 @@ const InvoiceForm = () => {
   useEffect(() => {
     dispatch(setTargetCurrency(currencyMap[formData.currency]));
     dispatch(getCurrencyRates(currencyMap[formData.currency]));
-  }, [formData.currency]);
-
-  const handleCalculateTotal = () => {
-    let subTotalValue = 0;
-    formData.items.forEach((item) => {
-      const product = products.find((p) => p.id === item.id);
-      subTotalValue += product.productPrice * conversionRate * item.quantity;
-    });
-
-    const totalValue = subTotalValue +
-      (Number(formData.taxRate) * Number(subTotalValue)) / 100 -
-      (Number(formData.discountRate) * Number(subTotalValue)) / 100;
-    return { subTotalValue, totalValue };
-  };
+  }, [products, formData]);
 
   useEffect(() => {
     dispatch(
@@ -78,7 +75,7 @@ const InvoiceForm = () => {
         subTotal: handleCalculateTotal().subTotalValue.toFixed(2),
       })
     );
-  }, [formData.items, formData.taxRate, formData.discountRate]);
+  }, [formData.items, formData.taxRate, formData.discountRate, products, formData.currency]);
 
   return (
     <form

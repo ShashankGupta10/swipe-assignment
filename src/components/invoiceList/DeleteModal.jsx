@@ -1,8 +1,10 @@
 import { BiTrash } from "react-icons/bi";
+import { useDispatch } from "react-redux";
 
-const DeleteModal = ({ id, dispatch, deleteInvoice, setIsDeleteModalOpen }) => {
+const DeleteModal = ({ id, deleteInvoice, setIsDeleteModalOpen }) => {
   if (!id) return null;
 
+  const dispatch = useDispatch();
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white flex flex-col items-center max-w-xl rounded-xl border px-8 py-10 text-gray-800 shadow-lg">

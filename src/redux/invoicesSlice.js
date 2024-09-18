@@ -1,12 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { invoiceSchema } from "../utils/invoiceSchema";
 
 const invoicesSlice = createSlice({
   name: "invoices",
   initialState: [],
   reducers: {
     addInvoice: (state, action) => {
+      // const { data, success, error } = invoiceSchema.safeParse(action.payload);
+      // if (success) {
+      //   toast.success("Invoice added successfully 🥳");
+      //   state.push(data);
+      //   return true
+      // } else {
+      //   console.log(error);
+      //   const errorMessage = error.issues?.[0]?.message || "An error occurred";
+      //   toast.error(`Failed to add invoice: ${errorMessage}`);
+      //   return false
+      // }
       state.push(action.payload);
+      toast.success("Invoice added successfully 🥳");
     },
     deleteInvoice: (state, action) => {
       toast.success("Invoice deleted successfully 🥳");

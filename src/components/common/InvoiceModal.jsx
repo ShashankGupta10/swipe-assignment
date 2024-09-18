@@ -82,7 +82,7 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
                 <div className="text-right">
                   <h6 className="font-bold mt-1 mb-2">Amount Due:</h6>
                   <h5 className="font-bold text-gray-600">
-                    {info.currency} {Number(total).toFixed(2)}
+                    {info.currency} {Number(total * conversionRate).toFixed(2)}
                   </h5>
                 </div>
               </div>
@@ -144,21 +144,21 @@ const InvoiceModal = ({ showModal, closeModal, invoiceId }) => {
                       <tr className="text-right">
                         <td className="font-bold">TAX</td>
                         <td className="text-right">
-                          {info.currency} {((info.taxRate * total) / 100).toFixed(2)}
+                          {info.currency} {((info.taxRate * total * conversionRate) / 100).toFixed(2)}
                         </td>
                       </tr>
                       {info.discountRate !== 0.0 && (
                         <tr className="text-right">
                           <td className="font-bold">DISCOUNT</td>
                           <td className="text-right">
-                            {info.currency} {((info.discountRate * total) / 100).toFixed(2)}
+                            {info.currency} {((info.discountRate * total * conversionRate) / 100).toFixed(2)}
                           </td>
                         </tr>
                       )}
                       <tr className="text-right">
                         <td className="font-bold">TOTAL</td>
                         <td className="text-right">
-                          {info.currency} {Number(total).toFixed(2)}
+                          {info.currency} {Number(total * conversionRate).toFixed(2)}
                         </td>
                       </tr>
                     </tbody>
